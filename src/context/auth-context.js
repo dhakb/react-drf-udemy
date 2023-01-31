@@ -21,16 +21,19 @@ function AuthProvider(props) {
         status
     })
 
-    // React.useEffect(() => {
-    //     console.log("loop?")
-    //     run(new Promise((res, rsj) => res("")))
-    // }, [run])
 
-
-    const login = (form) => auth.login(form).then((res) => setData(res.data))
-    const register = (form) => auth.register(form).then((res) => setData(res.data))
-    const logout = () => console.log("logged out")
-
+    const login = (form) => auth.login(form).then((res) => {
+        setData(res.data)
+        localStorage.setItem("__user_auth_token__", res?.data.access)
+    })
+    const register = (form) => auth.register(form).then((res) => {
+        setData(res.data)
+        localStorage.setItem("__user_auth_token__", res?.data.access)
+    })
+    const logout = () => {
+        setData(null)
+        localStorage.clear()
+    }
 
 
     const value = {
@@ -40,10 +43,9 @@ function AuthProvider(props) {
         logout
     }
 
-
-    if (isLoading) {
-        return <FullPageSpinner/>
-    }
+    // if (isLoading || isIdle) {
+    //     return <FullPageSpinner/>
+    // }
 
     if (isError) {
         return <FullPageErrorFallback error={error}/>
