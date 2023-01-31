@@ -11,13 +11,6 @@ const callAll =
         (...args) =>
             fns.forEach(fn => fn && fn(...args))
 
-
-// const callAllReadable = (...fns) => {
-//     return (...args) => {
-//         fns.forEach(fn => fn && fn(...args))
-//     }
-// }
-
 const ModalContext = React.createContext(null)
 
 function Modal(props) {

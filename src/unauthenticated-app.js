@@ -3,21 +3,23 @@
 import {jsx} from '@emotion/core'
 
 import * as React from "react"
-import {Button, FormGroup, Input, Spinner} from "./components/lib";
+import {Button, FormGroup, Input, Spinner, ErrorMessage} from "./components/lib";
 import {Modal, ModalContents, ModalOpenButton} from "./components/modal";
+import {useAsync} from "./utils/hooks";
+import {useAuthContext} from "./context/auth-context";
 import Logo from "./components/logo"
 
 const LoginForm = ({onSubmit, submitButton}) => {
-
+    const {isError, isLoading, error, run} = useAsync()
     const handleSubmit = (e) => {
         e.preventDefault()
         const {username, password} = e.target.elements
-
-        console.log(username.value, password.value)
+        console.log(onSubmit)
+        run(onSubmit({username: username.value, password: password.value}))
 
     }
 
-    const isLoading = true
+
     return (
         <form onSubmit={handleSubmit}
               css={{
@@ -45,23 +47,30 @@ const LoginForm = ({onSubmit, submitButton}) => {
                     React.cloneElement(submitButton, {type: "submit"}, ...(Array.isArray(submitButton.props.children) ? submitButton.props.children : [submitButton.props.children]), isLoading &&
                         <Spinner css={{marginLeft: 5}}/>)
                 }
-
             </div>
+            {isError && <ErrorMessage error={error}/>}
         </form>
     )
 }
 
 const RegisterForm = ({onSubmit, submitButton}) => {
+    const {isLoading, isError, error, isSuccess, run} = useAsync()
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
         const {firstname, lastname, email, username, password, passwordConfirm} = e.target.elements
 
-        console.log(firstname.value, lastname.value, email.value, username.value, password.value, passwordConfirm.value)
+        run(onSubmit({
+            firstname: firstname.value,
+            lastname: lastname.value,
+            email: email.value,
+            username: username.value,
+            password: password.value,
+            passwordConfirm: passwordConfirm.value
+        }))
     }
 
-    const isLoading = true
     return (
         <form onSubmit={handleSubmit}
               css={{
@@ -108,15 +117,15 @@ const RegisterForm = ({onSubmit, submitButton}) => {
                     React.cloneElement(submitButton, {type: "submit"}, ...(Array.isArray(submitButton.props.children) ? submitButton.props.children : [submitButton.props.children]), isLoading &&
                         <Spinner css={{marginLeft: 5}}/>)
                 }
-
             </div>
+            {isError && <ErrorMessage error={error}/>}
         </form>
     )
 }
 
 
 function UnauthenticatedApp() {
-
+    const {login, register} = useAuthContext()
     return (
         <div
             css={{
@@ -140,7 +149,7 @@ function UnauthenticatedApp() {
                         <Button variant="primary">Login</Button>
                     </ModalOpenButton>
                     <ModalContents aria-label="login form" title="Login">
-                        <LoginForm onSubmit={""} submitButton={<Button variant="primary">Login</Button>}/>
+                        <LoginForm onSubmit={login} submitButton={<Button variant="primary">Login</Button>}/>
                     </ModalContents>
                 </Modal>
 
@@ -149,7 +158,7 @@ function UnauthenticatedApp() {
                         <Button variant="secondary">Register</Button>
                     </ModalOpenButton>
                     <ModalContents aria-label="Registration form" title="Register">
-                        <RegisterForm onSubmit={""} submitButton={<Button variant="primary">Register</Button>}/>
+                        <RegisterForm onSubmit={register} submitButton={<Button variant="primary">Register</Button>}/>
                     </ModalContents>
                 </Modal>
             </div>
