@@ -12,7 +12,7 @@ const AuthContext = React.createContext(null)
 AuthContext.displayName = "AuthContext"
 
 function AuthProvider(props) {
-    const {data, status, error, isLoading, isError, isSuccess, isIdle, run, setData} = useAsync()
+    const {data, status, error, isLoading, isError, isSuccess, isIdle, setData} = useAsync()
     console.log({
         data,
         isIdle,
@@ -33,6 +33,7 @@ function AuthProvider(props) {
     const logout = () => {
         setData(null)
         localStorage.clear()
+        window.location.reload()
     }
 
 

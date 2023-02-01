@@ -14,9 +14,8 @@ const LoginForm = ({onSubmit, submitButton}) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         const {username, password} = e.target.elements
-        console.log(onSubmit)
-        run(onSubmit({username: username.value, password: password.value}))
 
+        run(onSubmit({username: username.value, password: password.value}))
     }
 
 
@@ -54,11 +53,10 @@ const LoginForm = ({onSubmit, submitButton}) => {
 }
 
 const RegisterForm = ({onSubmit, submitButton}) => {
-    const {isLoading, isError, error, isSuccess, run} = useAsync()
+    const {isLoading, isError, error, run} = useAsync()
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
         const {firstname, lastname, email, username, password, passwordConfirm} = e.target.elements
 
         run(onSubmit({

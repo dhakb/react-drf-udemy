@@ -12,7 +12,7 @@ function App() {
 
     React.useEffect(() => {
         const user_token = localStorage.getItem("__user_auth_token__")
-        console.log(typeof user_token)
+
         if(user_token !== "undefined" && typeof user_token === "string") {
             setIsUser(true)
         } else {

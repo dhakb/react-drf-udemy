@@ -1,9 +1,9 @@
 /** @jsx jsx */
 /** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
+import {jsx, keyframes} from '@emotion/core'
 
+import {Link as RouterLink} from 'react-router-dom'
 import styled from '@emotion/styled/macro'
-import {keyframes} from "@emotion/core";
 import {FaSpinner} from "react-icons/fa";
 import * as colors from "../styles/colors"
 import {Dialog as ReachDialog} from '@reach/dialog'
@@ -36,7 +36,7 @@ const buttonVariants = {
         color: colors.base,
     },
     secondary: {
-        background: colors.gray,
+        background: colors.gray20,
         color: colors.text,
     },
 }
@@ -105,7 +105,7 @@ function FullPageSpinner() {
                 alignItems: 'center',
             }}
         >
-            <Spinner />
+            <Spinner/>
         </div>
     )
 }
@@ -154,4 +154,12 @@ function ErrorMessage({error, variant = 'stacked', ...props}) {
     )
 }
 
-export {FormGroup, Input, Button, Spinner, Dialog, CircleButton, FullPageSpinner, FullPageErrorFallback, ErrorMessage}
+const Link = styled(RouterLink)({
+    color: colors.indigo,
+    ':hover': {
+        color: colors.indigoDarken10,
+        textDecoration: 'underline',
+    },
+})
+
+export {FormGroup, Input, Button, Spinner, Dialog, CircleButton, FullPageSpinner, FullPageErrorFallback, ErrorMessage, Link}
