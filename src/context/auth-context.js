@@ -5,21 +5,20 @@ import {jsx} from '@emotion/core'
 import * as React from "react"
 import * as auth from "../utils/auth-provider"
 import {useAsync} from "../utils/hooks";
-import {apiClient} from "../utils/api-client";
-import {FullPageErrorFallback, FullPageSpinner} from "../components/lib";
+import {FullPageErrorFallback} from "../components/lib";
 
 const AuthContext = React.createContext(null)
 AuthContext.displayName = "AuthContext"
 
 function AuthProvider(props) {
     const {data, status, error, isLoading, isError, isSuccess, isIdle, setData} = useAsync()
-    console.log({
-        data,
-        isIdle,
-        isLoading,
-        isSuccess,
-        status
-    })
+    // console.log({
+    //     data,
+    //     isIdle,
+    //     isLoading,
+    //     isSuccess,
+    //     status
+    // })
 
 
     const login = (form) => auth.login(form).then((res) => {
@@ -33,7 +32,7 @@ function AuthProvider(props) {
     const logout = () => {
         setData(null)
         localStorage.clear()
-        window.location.reload()
+        window.location.href = "/"
     }
 
 
@@ -67,11 +66,5 @@ function useAuthContext() {
     return context
 }
 
-function useApiClient() {
-    const {data: {data}} = useAuthContext()
-    const token = data?.access
-    return (endpoint, config) => apiClient(endpoint, {...config, token})
-}
 
-
-export {AuthProvider, useAuthContext, useApiClient}
+export {AuthProvider, useAuthContext}

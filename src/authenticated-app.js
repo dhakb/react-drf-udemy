@@ -15,9 +15,12 @@ import {NotFoundScreen} from "./screens/not-found";
 import {BooksListScreen} from "./screens/books-list";
 import {EventsListScreen} from "./screens/events-list";
 import {AuthorsListScreen} from "./screens/authors-list";
+import {AuthorBooksScreen} from "./screens/author-books";
+import {EventScreen} from "./screens/event";
+import {AuthorScreen} from "./screens/author"
 
 
-function AuthenticatedApp(props) {
+function AuthenticatedApp() {
     const {logout} = useAuthContext()
 
     return (
@@ -137,6 +140,9 @@ function AppRoutes() {
             <Route path="/authors" element={<AuthorsListScreen />} />
             <Route path="/events" element={<EventsListScreen />} />
             <Route path="/book/:bookId" element={<BookScreen />} />
+            <Route path="/author/:authorId" element={<AuthorScreen/>}/>
+            <Route path="/author/:authorId/books" element={<AuthorBooksScreen/>}/>
+            <Route path="/event/:eventId" element={<EventScreen/>}/>
             <Route path="*" element={<NotFoundScreen />} />
         </Routes>
     )
