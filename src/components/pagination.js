@@ -1,15 +1,15 @@
-import * as React from "react"
+/** @jsx jsx */
+/** @jsxRuntime classic */
+import {jsx} from '@emotion/core'
 
+import * as React from "react"
 import {useApiClient} from "../utils/api-client";
 
 
-function Pagination ({ setData, nextPage, prevPage, setNextPage, setPrevPage}){
+function Pagination({setData, nextPage, prevPage, setNextPage, setPrevPage}) {
     const fetchPages = useApiClient()
     const [pageNumber, setPageNumber] = React.useState(1)
 
-    const func = () => {
-
-    }
 
     const nextPageHandler = () => {
         setPageNumber((prev) => prev + 1);
@@ -25,7 +25,7 @@ function Pagination ({ setData, nextPage, prevPage, setNextPage, setPrevPage}){
 
 
     const prevPageHandler = () => {
-        if(pageNumber === 1) return;
+        if (pageNumber === 1) return;
         setPageNumber((prev) => prev - 1);
 
         fetchPages(prevPage, {method: "GET", pagination: true}).then((res) => {
@@ -39,7 +39,13 @@ function Pagination ({ setData, nextPage, prevPage, setNextPage, setPrevPage}){
 
 
     return (
-        <div className="container my-5 d-flex justify-content-center gap-5">
+        <div css={{
+            display: "flex",
+            gap: "30px",
+            justifyContent: "center",
+            marginTop: "15px"
+        }}
+        >
             <button onClick={prevPageHandler} className="bt btn-success" disabled={!prevPage}>
                 Prev
             </button>
