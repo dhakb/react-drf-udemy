@@ -10,8 +10,8 @@ function useSafeDispatch(dispatch) {
     return React.useCallback((...args) => (isMounted.current ? dispatch(...args) : void 0), [dispatch])
 }
 
-
-const defaultInitialState = {status: "idle", data: null, error: null}
+const token = localStorage.getItem("__user_auth_token__")
+const defaultInitialState = {status: "idle", data: {access: token}, error: null}
 
 function useAsync(initialState) {
     const initialStateRef = React.useRef({
@@ -20,7 +20,6 @@ function useAsync(initialState) {
     })
 
     const [{status, data, error}, dispatch] = React.useReducer((a, b) => ({...a, ...b}), initialStateRef.current)
-
     const safeSetState = useSafeDispatch(dispatch)
 
     const setData = (data) => safeSetState({data, status: "resolved"})
@@ -33,14 +32,17 @@ function useAsync(initialState) {
         }
         safeSetState({status: "pending"})
 
-        return promise.then((data) => {
-            setData(data)
-            return data
+        return promise.then((res) => {
+            console.log("run func", res)
+            setData(res.data)
+            return res
         }).catch(error => {
+            console.log("this is error", error)
             setError(error)
             return Promise.reject(error)
         })
     }
+
 
     return {
         isIdle: status === "idle",
@@ -53,7 +55,7 @@ function useAsync(initialState) {
         status,
         data,
         run,
-        reset
+        reset,
     }
 }
 

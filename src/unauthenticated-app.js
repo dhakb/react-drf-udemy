@@ -66,7 +66,7 @@ const RegisterForm = ({onSubmit, submitButton}) => {
             username: username.value,
             password: password.value,
             passwordConfirm: passwordConfirm.value
-        }))
+        })).catch(console.log)
     }
 
     return (

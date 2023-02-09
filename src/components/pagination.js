@@ -6,7 +6,7 @@ import * as React from "react"
 import {useApiClient} from "../utils/api-client";
 
 
-function Pagination({setData, nextPage, prevPage, setNextPage, setPrevPage}) {
+function Pagination({setData, nextPage, prevPage, setNextPage, setPrevPage, pageNumber: pageNum}) {
     const fetchPages = useApiClient()
     const [pageNumber, setPageNumber] = React.useState(1)
 

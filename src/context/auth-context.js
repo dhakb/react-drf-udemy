@@ -7,11 +7,12 @@ import * as auth from "../utils/auth-provider"
 import {useAsync} from "../utils/hooks";
 import {FullPageErrorFallback} from "../components/lib";
 
-const AuthContext = React.createContext(null)
+
+const AuthContext = React.createContext()
 AuthContext.displayName = "AuthContext"
 
 function AuthProvider(props) {
-    const {data, status, error, isLoading, isError, isSuccess, isIdle, setData} = useAsync()
+    const {data, status, error, isLoading, isError, isSuccess, isIdle, setData, setError} = useAsync()
     // console.log({
     //     data,
     //     isIdle,
@@ -21,17 +22,37 @@ function AuthProvider(props) {
     // })
 
 
-    const login = (form) => auth.login(form).then((res) => {
-        setData(res.data)
-        localStorage.setItem("__user_auth_token__", res?.data.access)
-    })
-    const register = (form) => auth.register(form).then((res) => {
-        setData(res.data)
-        localStorage.setItem("__user_auth_token__", res?.data.access)
-    })
+    const login = (form) => auth.login(form)
+        .then((res) => {
+            setData(res.data)
+            localStorage.setItem("__user_auth_token__", res?.data.access)
+            return res.data
+        }).catch((error) => {
+            console.log(error)
+            setError(error)
+        })
+
+
+    const register = (form) => auth.register(form)
+        .then((res) => {
+            console.log("register success!!!!")
+            const {username, password} = form
+            if (res.statusText === "OK") {
+                login({username, password}).catch(setError)
+            }
+            console.log("register req res", res)
+            return res
+        })
+        .catch((error) => {
+            console.log("error in register", error)
+            setError(error)
+        })
+
+
     const logout = () => {
+        auth.logOut()
         setData(null)
-        localStorage.clear()
+        // queryCache.clear()
         window.location.href = "/"
     }
 

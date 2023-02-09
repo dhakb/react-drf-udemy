@@ -4,13 +4,17 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react';
 import {useNavigate, useParams} from "react-router";
+import {useQueryClient} from "react-query";
+
 import {useApiClient} from "../utils/api-client";
+import {FullPageSpinner} from "../components/lib";
 import Note from "../components/note";
+import {useBook} from "../queries/book";
 
 
 function BookScreen() {
     const forceUpdate = React.useState({})[1].bind(null, {})
-    const [book, setBook] = React.useState({})
+    // const [book, setBook] = React.useState({})
     const [toggleEventForm, setToggleEventForm] = React.useState(false)
     const {bookId} = useParams()
     const fetchBook = useApiClient()
@@ -20,69 +24,79 @@ function BookScreen() {
     const createEvent = useApiClient()
     const navigate = useNavigate()
     const noteRef = React.useRef()
+    const {data: book, isLoading} = useBook(bookId)
+    const queryClient = useQueryClient()
+    // console.log(queryClient)
+    console.log(book)
 
 
-    React.useEffect(() => {
-        fetchBook(`book/${bookId}/`, {method: "GET"})
-            .then(res => {
-                setBook(res.data)
-            })
-            .catch((e) => {
-                console.log(e)
-            })
-    }, [bookId])
+
+    // React.useEffect(() => {
+    //     fetchBook(`book/${bookId}/`, {method: "GET"})
+    //         .then(res => {
+    //             setBook(res.data)
+    //         })
+    //         .catch((e) => {
+    //             console.log(e)
+    //         })
+    // }, [bookId])
 
 
     const createNoteHandler = () => {
-        if (noteRef.current.value.length === 0) {
-            alert("not possible to create note without note")
-            return;
-        }
-        postNote(`note/book/${book.id}/`, {method: "POST", body: {note: noteRef.current.value}})
-            .then((res) => {
-                setBook((prev) => ({...prev, note: {...res.data, note_text: res.data.note}}))
-            })
-            .catch(console.log)
-        noteRef.current.value = ""
+        // if (noteRef.current.value.length === 0) {
+        //     alert("not possible to create note without note")
+        //     return;
+        // }
+        // postNote(`note/book/${book.id}/`, {method: "POST", body: {note: noteRef.current.value}})
+        //     .then((res) => {
+        //         setBook((prev) => ({...prev, note: {...res.data, note_text: res.data.note}}))
+        //     })
+        //     .catch(console.log)
+        // noteRef.current.value = ""
     }
 
 
     const updateNoteHandler = (note) => {
-        editNote(`note/${book.note.id}/`, {method: "PUT", body: {note}})
-            .then((res) => {
-                setBook((prev) => ({...prev, note: {...res.data, note_text: res.data.note}}))
-            })
-            .catch(console.log)
+        // editNote(`note/${book.note.id}/`, {method: "PUT", body: {note}})
+        //     .then((res) => {
+        //         setBook((prev) => ({...prev, note: {...res.data, note_text: res.data.note}}))
+        //     })
+        //     .catch(console.log)
     }
 
 
     const deleteNoteHandler = () => {
-        deleteNote(`note/${book.note.id}/`, {method: "DELETE"})
-            .then((res) => {
-                setBook((prev) => ({...prev, note: null}))
-            })
-            .catch(console.log)
+        // deleteNote(`note/${book.note.id}/`, {method: "DELETE"})
+        //     .then((res) => {
+        //         setBook((prev) => ({...prev, note: null}))
+        //     })
+        //     .catch(console.log)
     }
 
 
     const onEventSubmit = (e) => {
-        e.preventDefault()
-        const {title, date, city, invitation, ageRegulation} = e.target.elements
-        const data = {
-            book_id: book.id,
-            title: title.value,
-            event_date: date.value,
-            city: city.value,
-            by_invitation:invitation.checked,
-            age_regulation: ageRegulation.checked
-        }
+        // e.preventDefault()
+        // const {title, date, city, invitation, ageRegulation} = e.target.elements
+        // const data = {
+        //     book_id: book.id,
+        //     title: title.value,
+        //     event_date: date.value,
+        //     city: city.value,
+        //     by_invitation:invitation.checked,
+        //     age_regulation: ageRegulation.checked
+        // }
+        //
+        // createEvent(`event/`, {method: "POST", body: data})
+        //     .then(res => {
+        //         setBook((prev) => ({...prev, event_id: res.data.id}))
+        //         navigate(`/event/${res.data.id}`)
+        //     })
+        //     .catch(console.log)
+    }
 
-        createEvent(`event/`, {method: "POST", body: data})
-            .then(res => {
-                setBook((prev) => ({...prev, event_id: res.data.id}))
-                navigate(`/event/${res.data.id}`)
-            })
-            .catch(console.log)
+
+    if(isLoading) {
+       return <FullPageSpinner/>
     }
 
 

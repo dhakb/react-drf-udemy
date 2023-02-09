@@ -22,20 +22,43 @@ function AuthorBooksScreen() {
 
 
     React.useEffect(() => {
-
         fetchAuthorBook(`/author/${authorId}/books/?limit=${limit}`, {method: "GET"}).then(res => {
             const {results, next, previous} = res.data
             setAuthorBooks(results)
             setNextPage(next)
             setPrevPage(previous)
+
         }).catch(console.log)
 
     }, [authorId, limit])
 
+    // React.useEffect(() => {
+    //     console.log("change page num")
+    //     console.log(prevPage, nextPage)
+    //
+    //     if(!prevPage && !nextPage) {
+    //         console.log("he heee")
+    //         setPageNumber(1)
+    //     }
+    //
+    //     if(!prevPage || prevPage.match(/page=[0-9]/g)) {
+    //         setPageNumber(1)
+    //     }
+    //
+    //     if(!nextPage && prevPage) {
+    //         const prevPageNum = prevPage.match(/page=[0-9]/g)
+    //         if(prevPageNum) {
+    //             setPrevPage(prevPageNum[0].slice(-1))
+    //         } else {
+    //             setPageNumber(1)
+    //         }
+    //     }
+    // }, [limit])
+
+
 
     const limitHandler = (e) => {
         setLimit(e.target.value)
-        console.log(nextPage, prevPage)
     }
 
     return (
@@ -65,7 +88,7 @@ function AuthorBooksScreen() {
                 ))}
             </ul>
             <Pagination setData={setAuthorBooks} nextPage={nextPage} prevPage={prevPage} setNextPage={setNextPage}
-                        setPrevPage={setPrevPage} limitPerPage={limit}/>
+                        setPrevPage={setPrevPage} limitPerPage={limit} pageNumber={pageNumber}/>
         </div>
     );
 }

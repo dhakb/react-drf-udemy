@@ -23,7 +23,6 @@ function BooksListScreen() {
 
     React.useEffect(() => {
         let endpoint = selectedTags ? `book/?tags=${selectedTags.reduce((acc, curr) => [...acc, curr.value], []).join()}` : "book/"
-        console.log("effect")
         fetchBooksList(endpoint, {method: "GET"}).then((res) => {
             const {next, previous, results} = res.data
             setBookList(results)
