@@ -12,6 +12,7 @@ import Note from "../components/note";
 
 import {useBook} from "../queries/book";
 import {useNoteCreate, useNoteUpdate, useNoteDelete} from "../queries/note";
+import {useEventCreate} from "../queries/event";
 
 
 
@@ -19,17 +20,16 @@ function BookScreen() {
     const forceUpdate = React.useState({})[1].bind(null, {})
     const [toggleEventForm, setToggleEventForm] = React.useState(false)
     const {bookId} = useParams()
-    const createEvent = useApiClient()
+    // const createEvent = useApiClient()
     const navigate = useNavigate()
     const noteRef = React.useRef()
-
 
     //React-Query /custom hooks
     const {data: book, isLoading} = useBook(bookId)
     const createNote = useNoteCreate(bookId)
     const updateNote = useNoteUpdate(book)
     const deleteNote = useNoteDelete(book)
-
+    const createEvent = useEventCreate(bookId)
 
 
 
@@ -40,7 +40,6 @@ function BookScreen() {
         }
 
         if (createNote.isLoading) return <div>Loading....</div>
-
         createNote.mutate({note: noteRef.current.value})
     }
 
@@ -58,23 +57,18 @@ function BookScreen() {
 
 
     const onEventSubmit = (e) => {
-        // e.preventDefault()
-        // const {title, date, city, invitation, ageRegulation} = e.target.elements
-        // const data = {
-        //     book_id: book.id,
-        //     title: title.value,
-        //     event_date: date.value,
-        //     city: city.value,
-        //     by_invitation:invitation.checked,
-        //     age_regulation: ageRegulation.checked
-        // }
-        //
-        // createEvent(`event/`, {method: "POST", body: data})
-        //     .then(res => {
-        //         setBook((prev) => ({...prev, event_id: res.data.id}))
-        //         navigate(`/event/${res.data.id}`)
-        //     })
-        //     .catch(console.log)
+        e.preventDefault()
+        const {title, date, city, invitation, ageRegulation} = e.target.elements
+        const data = {
+            book_id: book.id,
+            title: title.value,
+            event_date: date.value,
+            city: city.value,
+            by_invitation:invitation.checked,
+            age_regulation: ageRegulation.checked
+        }
+
+        createEvent.mutate({...data})
     }
 
 

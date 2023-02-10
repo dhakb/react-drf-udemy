@@ -5,38 +5,28 @@ import {jsx} from '@emotion/core'
 import * as React from 'react';
 
 import {useNavigate, useParams} from "react-router";
-import {useApiClient} from "../utils/api-client";
+import {useEventDelete, useEventFetch, useEventUpdate} from "../queries/event";
 
 
 function EventScreen() {
-    const [event, setEvent] = React.useState({})
     const [isEditMode, setIsEditMode] = React.useState(false)
-    const fetchEvent = useApiClient()
-    const deleteEvent = useApiClient()
-    const updateEvent = useApiClient()
     const navigate = useNavigate()
     const {eventId} = useParams()
 
-    React.useEffect(() => {
-        fetchEvent(`event/${eventId}`, {method: "GET"}).then(res => {
-            setEvent(res.data)
-        }).catch(console.log)
-    }, [eventId])
-
+    const {isLoading: isEventLoading, data: event} = useEventFetch(eventId)
+    const updateEvent = useEventUpdate(eventId)
+    const deleteEvent = useEventDelete(eventId, event?.book?.id)
 
 
     const eventDeleteHandler = () => {
-        deleteEvent(`event/${event.id}/`, {method: "DELETE"})
-            .then(res => {
-                navigate(`/book/${event.book_id}`)
-            })
-            .catch(console.log)
+        deleteEvent.mutate()
+        navigate(-1)
     }
+
 
     const eventUpdateHandler = (e) => {
         e.preventDefault()
         const {title, date, city, invitation, ageRegulation} = e.target.elements
-
         const data = {
             title: title.value,
             event_date: date.value,
@@ -45,14 +35,11 @@ function EventScreen() {
             age_regulation: ageRegulation.checked
         }
 
-        updateEvent(`event/${event.id}/`, {method: "PATCH", body: data})
-            .then(res => {
-                setIsEditMode(false)
-            })
-            .catch(console.log)
+        updateEvent.mutate({...data})
+        setIsEditMode(false)
     }
 
-
+    if (isEventLoading) return <div>Loading...</div>
 
     return (
         <div>
@@ -83,7 +70,7 @@ function EventScreen() {
                 }
 
                 {
-                  isEditMode && (
+                    isEditMode && (
                         <form onSubmit={eventUpdateHandler} css={{
                             display: "flex",
                             flexDirection: "column",
