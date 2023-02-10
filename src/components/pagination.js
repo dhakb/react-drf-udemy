@@ -3,38 +3,25 @@
 import {jsx} from '@emotion/core'
 
 import * as React from "react"
-import {useApiClient} from "../utils/api-client";
+
+import {useNextPage, usePreviousPage} from "../queries/book";
 
 
 function Pagination({setData, nextPage, prevPage, setNextPage, setPrevPage, pageNumber: pageNum}) {
-    const fetchPages = useApiClient()
     const [pageNumber, setPageNumber] = React.useState(1)
+    const {refetch: fetchNextPage} = useNextPage(nextPage)
+    const {refetch: fetchPreviousPage} = usePreviousPage(prevPage)
 
 
     const nextPageHandler = () => {
         setPageNumber((prev) => prev + 1);
-
-        fetchPages(nextPage, {method: "GET", pagination: true}).then((res) => {
-            const {results, next, previous} = res.data
-            setData(results)
-            setNextPage(next)
-            setPrevPage(previous)
-        }).catch(console.log)
-
+        fetchNextPage().then(() => console.log("success nextfetching"))
     };
 
 
     const prevPageHandler = () => {
-        if (pageNumber === 1) return;
         setPageNumber((prev) => prev - 1);
-
-        fetchPages(prevPage, {method: "GET", pagination: true}).then((res) => {
-            const {results, next, previous} = res.data
-            setData(results)
-            setNextPage(next)
-            setPrevPage(previous)
-        }).catch(console.log)
-
+        fetchPreviousPage().then(() => console.log("success prevfetching"))
     };
 
 

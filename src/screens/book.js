@@ -5,8 +5,6 @@ import {jsx} from '@emotion/core'
 import * as React from 'react';
 import {useNavigate, useParams} from "react-router";
 
-
-import {useApiClient} from "../utils/api-client";
 import {FullPageSpinner} from "../components/lib";
 import Note from "../components/note";
 
@@ -17,19 +15,18 @@ import {useEventCreate} from "../queries/event";
 
 
 function BookScreen() {
-    const forceUpdate = React.useState({})[1].bind(null, {})
     const [toggleEventForm, setToggleEventForm] = React.useState(false)
-    const {bookId} = useParams()
-    // const createEvent = useApiClient()
-    const navigate = useNavigate()
+    const forceUpdate = React.useState({})[1].bind(null, {})
     const noteRef = React.useRef()
+    const navigate = useNavigate()
+    const {bookId} = useParams()
 
     //React-Query /custom hooks
     const {data: book, isLoading} = useBook(bookId)
+    const createEvent = useEventCreate(bookId)
     const createNote = useNoteCreate(bookId)
     const updateNote = useNoteUpdate(book)
     const deleteNote = useNoteDelete(book)
-    const createEvent = useEventCreate(bookId)
 
 
 
