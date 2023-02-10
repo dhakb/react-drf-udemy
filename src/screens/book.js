@@ -4,73 +4,56 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react';
 import {useNavigate, useParams} from "react-router";
-import {useQueryClient} from "react-query";
+
 
 import {useApiClient} from "../utils/api-client";
 import {FullPageSpinner} from "../components/lib";
 import Note from "../components/note";
+
 import {useBook} from "../queries/book";
+import {useNoteCreate, useNoteUpdate, useNoteDelete} from "../queries/note";
+
 
 
 function BookScreen() {
     const forceUpdate = React.useState({})[1].bind(null, {})
-    // const [book, setBook] = React.useState({})
     const [toggleEventForm, setToggleEventForm] = React.useState(false)
     const {bookId} = useParams()
-    const fetchBook = useApiClient()
-    const postNote = useApiClient()
-    const deleteNote = useApiClient()
-    const editNote = useApiClient()
     const createEvent = useApiClient()
     const navigate = useNavigate()
     const noteRef = React.useRef()
+
+
+    //React-Query /custom hooks
     const {data: book, isLoading} = useBook(bookId)
-    const queryClient = useQueryClient()
-    // console.log(queryClient)
-    console.log(book)
+    const createNote = useNoteCreate(bookId)
+    const updateNote = useNoteUpdate(book)
+    const deleteNote = useNoteDelete(book)
 
 
 
-    // React.useEffect(() => {
-    //     fetchBook(`book/${bookId}/`, {method: "GET"})
-    //         .then(res => {
-    //             setBook(res.data)
-    //         })
-    //         .catch((e) => {
-    //             console.log(e)
-    //         })
-    // }, [bookId])
 
+    const createNoteHandler = async () => {
+        if (noteRef.current.value.length === 0) {
+            alert("not possible to create note without note")
+            return;
+        }
 
-    const createNoteHandler = () => {
-        // if (noteRef.current.value.length === 0) {
-        //     alert("not possible to create note without note")
-        //     return;
-        // }
-        // postNote(`note/book/${book.id}/`, {method: "POST", body: {note: noteRef.current.value}})
-        //     .then((res) => {
-        //         setBook((prev) => ({...prev, note: {...res.data, note_text: res.data.note}}))
-        //     })
-        //     .catch(console.log)
-        // noteRef.current.value = ""
+        if (createNote.isLoading) return <div>Loading....</div>
+
+        createNote.mutate({note: noteRef.current.value})
     }
 
 
     const updateNoteHandler = (note) => {
-        // editNote(`note/${book.note.id}/`, {method: "PUT", body: {note}})
-        //     .then((res) => {
-        //         setBook((prev) => ({...prev, note: {...res.data, note_text: res.data.note}}))
-        //     })
-        //     .catch(console.log)
+        if(updateNote.isLoading) return <div>Loading...</div>
+        updateNote.mutate({note})
     }
 
 
     const deleteNoteHandler = () => {
-        // deleteNote(`note/${book.note.id}/`, {method: "DELETE"})
-        //     .then((res) => {
-        //         setBook((prev) => ({...prev, note: null}))
-        //     })
-        //     .catch(console.log)
+        console.log("loading:", deleteNote.isLoading, "/nSuccess:", deleteNote.isSuccess)
+        deleteNote.mutate()
     }
 
 
@@ -95,8 +78,8 @@ function BookScreen() {
     }
 
 
-    if(isLoading) {
-       return <FullPageSpinner/>
+    if (isLoading) {
+        return <FullPageSpinner/>
     }
 
 
@@ -144,28 +127,29 @@ function BookScreen() {
                 ) : (
                     <div>
                         {
-                            !toggleEventForm ? <button onClick={() => setToggleEventForm(true)}>create event</button> : (
-                                <form onSubmit={onEventSubmit} css={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "5px",
-                                    width: "200px"
-                                }}>
-                                    <input type="text" placeholder="event title" id="title" />
-                                    <input type="date" placeholder="" id="date"/>
-                                    <input type="city" placeholder="enter city" id="city"/>
-                                    <label>
-                                        by invitation
-                                        <input type="checkbox" id="invitation"/>
-                                    </label>
-                                    <label>
-                                        age regulation
-                                        <input type="checkbox" id="ageRegulation"/>
-                                    </label>
-                                    <button>save</button>
-                                    <button onClick={() => setToggleEventForm(false)}>cancel</button>
-                                </form>
-                            )
+                            !toggleEventForm ?
+                                <button onClick={() => setToggleEventForm(true)}>create event</button> : (
+                                    <form onSubmit={onEventSubmit} css={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "5px",
+                                        width: "200px"
+                                    }}>
+                                        <input type="text" placeholder="event title" id="title"/>
+                                        <input type="date" placeholder="" id="date"/>
+                                        <input type="city" placeholder="enter city" id="city"/>
+                                        <label>
+                                            by invitation
+                                            <input type="checkbox" id="invitation"/>
+                                        </label>
+                                        <label>
+                                            age regulation
+                                            <input type="checkbox" id="ageRegulation"/>
+                                        </label>
+                                        <button>save</button>
+                                        <button onClick={() => setToggleEventForm(false)}>cancel</button>
+                                    </form>
+                                )
                         }
                     </div>
                 )
@@ -174,5 +158,5 @@ function BookScreen() {
     );
 }
 
-export { BookScreen };
+export {BookScreen};
 
