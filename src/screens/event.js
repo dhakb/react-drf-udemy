@@ -13,6 +13,7 @@ function EventScreen() {
     const navigate = useNavigate()
     const {eventId} = useParams()
 
+    //React-Query /custom hooks
     const {isLoading: isEventLoading, data: event} = useEventFetch(eventId)
     const updateEvent = useEventUpdate(eventId)
     const deleteEvent = useEventDelete(eventId, event?.book?.id)

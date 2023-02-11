@@ -4,7 +4,7 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react';
 import {Link} from "react-router-dom"
-import {useBooks, useTags} from "../queries/book";
+import {useBooks, useBooksNextPage, useBooksPrevPage, useTags} from "../queries/book";
 
 import Pagination from "../components/pagination";
 import BookItem from "../components/book-item";
@@ -17,8 +17,10 @@ function BooksListScreen() {
     const [prevPage, setPrevPage] = React.useState(null)
     const [selectedTags, setSelectedTags] = React.useState([])
 
-
-    const {isLoading, data: books} = useBooks()
+    //React-Query /custom hooks
+    const {isLoading, data: books, refetch: refetchBooksList} = useBooks(selectedTags)
+    const {refetch: fetchNextPage} = useBooksNextPage(nextPage)
+    const {refetch: fetchPreviousPage} = useBooksPrevPage(prevPage)
     const {data: tags} = useTags()
 
     React.useEffect(() => {
@@ -27,9 +29,11 @@ function BooksListScreen() {
     }, [books])
 
 
-    const selectTagsHandler = (tag) => {
-        setSelectedTags(tag)
-    }
+    React.useEffect(() => {
+        refetchBooksList().catch(console.log)
+    }, [selectedTags])
+
+
 
     if(isLoading) {
         return <div>Loading...</div>
@@ -43,7 +47,7 @@ function BooksListScreen() {
                 gap: "15px"
             }}>
 
-                <Select placeholder="Filter by genre" onChange={selectTagsHandler}
+                <Select placeholder="Filter by genre" onChange={setSelectedTags}
                         options={tags} value={selectedTags} isMulti/>
 
                 {
@@ -55,11 +59,7 @@ function BooksListScreen() {
                 }
             </div>
 
-            <Pagination nextPage={nextPage} prevPage={prevPage} setPrevPage={setPrevPage}
-                        setNextPage={setNextPage}/>
-
-            {/*<Pagination setData={setBookList} nextPage={nextPage} prevPage={prevPage} setPrevPage={setPrevPage}*/}
-            {/*            setNextPage={setNextPage}/>*/}
+            <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPreviousPage} nextPage={nextPage} prevPage={prevPage}/>
         </div>
     );
 }

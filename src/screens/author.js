@@ -1,20 +1,18 @@
 import * as React from 'react';
-import {useApiClient} from "../utils/api-client";
 import {useParams, useNavigate} from "react-router-dom";
+import {useAuthor} from "../queries/author";
 
 
 
 function AuthorScreen() {
-    const [author, setAuthor] = React.useState("")
-    const fetchAuthor = useApiClient()
     const {authorId} = useParams()
     const navigate = useNavigate()
+    const {isLoading, data: author} = useAuthor(authorId)
 
-    React.useEffect(() => {
-        fetchAuthor(`author/${authorId}`, {method: "GET"}).then(res => {
-            setAuthor(res.data)
-        }).catch(console.log)
-    }, [authorId])
+
+    if(isLoading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div>

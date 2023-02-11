@@ -33,11 +33,9 @@ function useAsync(initialState) {
         safeSetState({status: "pending"})
 
         return promise.then((res) => {
-            console.log("run func", res)
             setData(res.data)
             return res
         }).catch(error => {
-            console.log("this is error", error)
             setError(error)
             return Promise.reject(error)
         })

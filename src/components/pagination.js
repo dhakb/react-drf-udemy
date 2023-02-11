@@ -4,13 +4,10 @@ import {jsx} from '@emotion/core'
 
 import * as React from "react"
 
-import {useNextPage, usePreviousPage} from "../queries/book";
 
 
-function Pagination({setData, nextPage, prevPage, setNextPage, setPrevPage, pageNumber: pageNum}) {
+function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {
     const [pageNumber, setPageNumber] = React.useState(1)
-    const {refetch: fetchNextPage} = useNextPage(nextPage)
-    const {refetch: fetchPreviousPage} = usePreviousPage(prevPage)
 
 
     const nextPageHandler = () => {
@@ -21,7 +18,7 @@ function Pagination({setData, nextPage, prevPage, setNextPage, setPrevPage, page
 
     const prevPageHandler = () => {
         setPageNumber((prev) => prev - 1);
-        fetchPreviousPage().then(() => console.log("success prevfetching"))
+        fetchPrevPage().then(() => console.log("success prevfetching"))
     };
 
 

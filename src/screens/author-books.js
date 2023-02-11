@@ -2,79 +2,53 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-
 import * as React from 'react';
 
-import {useApiClient} from "../utils/api-client";
 import {Link, useParams} from "react-router-dom";
+import {useAuthorBooks, useAuthorsNextPage, useAuthorsPrevPage} from "../queries/author";
 import Pagination from "../components/pagination";
 
 
 function AuthorBooksScreen() {
-    const [authorBooks, setAuthorBooks] = React.useState([])
-    const [pageNumber, setPageNumber] = React.useState(1)
     const [nextPage, setNextPage] = React.useState(null)
     const [prevPage, setPrevPage] = React.useState(null)
-    const [limit, setLimit] = React.useState(5)
-    const fetchAuthorBook = useApiClient()
+    const [limit, setLimit] = React.useState("5")
     const {authorId} = useParams()
 
+    //React-Query /custom hooks
+    const {isLoading, data: books, refetch: refetchAuthorBooks} = useAuthorBooks(authorId, limit)
+    const {refetch: fetchPrevPage} = useAuthorsPrevPage({prevPage, queryKey: ["authorBooks", {authorId}]})
+    const {refetch: fetchNextPage} = useAuthorsNextPage({nextPage, queryKey: ["authorBooks", {authorId}]})
+    // const {refetch: fetchPage} = useAuthorsPage({nextPage, queryKey: ["authorBooks", {authorId}]})
 
 
     React.useEffect(() => {
-        fetchAuthorBook(`/author/${authorId}/books/?limit=${limit}`, {method: "GET"}).then(res => {
-            const {results, next, previous} = res.data
-            setAuthorBooks(results)
-            setNextPage(next)
-            setPrevPage(previous)
-
-        }).catch(console.log)
-
-    }, [authorId, limit])
-
-    // React.useEffect(() => {
-    //     console.log("change page num")
-    //     console.log(prevPage, nextPage)
-    //
-    //     if(!prevPage && !nextPage) {
-    //         console.log("he heee")
-    //         setPageNumber(1)
-    //     }
-    //
-    //     if(!prevPage || prevPage.match(/page=[0-9]/g)) {
-    //         setPageNumber(1)
-    //     }
-    //
-    //     if(!nextPage && prevPage) {
-    //         const prevPageNum = prevPage.match(/page=[0-9]/g)
-    //         if(prevPageNum) {
-    //             setPrevPage(prevPageNum[0].slice(-1))
-    //         } else {
-    //             setPageNumber(1)
-    //         }
-    //     }
-    // }, [limit])
+        setNextPage(books?.next)
+        setPrevPage(books?.previous)
+    }, [books])
 
 
+    React.useEffect(() => {
+        refetchAuthorBooks().catch(console.log)
+    }, [limit])
 
-    const limitHandler = (e) => {
-        setLimit(e.target.value)
+
+    if(isLoading) {
+        return <div>Loading...</div>
     }
 
     return (
         <div>
             <h1>Boooks by</h1>
 
-
-            <select value={limit} onChange={limitHandler} >
+            <select value={limit} onChange={(e) => setLimit(e.target.value)} >
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
             </select>
 
-
             <ul>
-                {authorBooks?.map(book => (
+                {books.results?.map(book => (
                     <li key={book.id}>
                         <Link to={`/book/${book.id}`}>
                             <h3>{book?.title}</h3>
@@ -87,8 +61,7 @@ function AuthorBooksScreen() {
                     </li>
                 ))}
             </ul>
-            <Pagination setData={setAuthorBooks} nextPage={nextPage} prevPage={prevPage} setNextPage={setNextPage}
-                        setPrevPage={setPrevPage} limitPerPage={limit} pageNumber={pageNumber}/>
+            <Pagination  nextPage={nextPage} prevPage={prevPage} fetchNextPage={fetchNextPage} fetchPrevPage={fetchPrevPage}/>
         </div>
     );
 }

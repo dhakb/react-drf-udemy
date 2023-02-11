@@ -48,7 +48,6 @@ function BookScreen() {
 
 
     const deleteNoteHandler = () => {
-        console.log("loading:", deleteNote.isLoading, "/nSuccess:", deleteNote.isSuccess)
         deleteNote.mutate()
     }
 

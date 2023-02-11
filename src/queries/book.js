@@ -17,13 +17,12 @@ function useBooks(selectedTags) {
     return useQuery({
         queryKey: "books",
         queryFn: () => fetchBooks(endpoint, {method: "GET"}).then(res => res.data)
-    })
+    },)
 }
 
 
 function useTags() {
     const fetchTags = useApiClient()
-
     return useQuery({
         queryKey: "tags",
         queryFn: () => fetchTags('book/tag', {method: "GET"}).then(res => {
@@ -33,9 +32,8 @@ function useTags() {
 }
 
 
-function useNextPage(page) {
+function useBooksNextPage(page) {
     const fetchPage = useApiClient()
-
     return useQuery({
         queryKey: "books",
         queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then(res => res.data)
@@ -43,13 +41,12 @@ function useNextPage(page) {
 }
 
 
-function usePreviousPage(page) {
+function useBooksPrevPage(page) {
     const fetchPage = useApiClient()
-
     return useQuery({
         queryKey: "books",
         queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then(res => res.data)
     })
 }
 
-export {useBook, useBooks, useTags, useNextPage, usePreviousPage}
+export {useBook, useBooks, useTags, useBooksNextPage, useBooksPrevPage}
