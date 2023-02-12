@@ -19,7 +19,7 @@ import {AuthorBooksScreen} from "./screens/author-books";
 import {EventScreen} from "./screens/event";
 import {AuthorScreen} from "./screens/author"
 
-git
+
 function AuthenticatedApp() {
     const {logout} = useAuthContext()
 

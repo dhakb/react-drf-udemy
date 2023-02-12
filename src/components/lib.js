@@ -39,6 +39,10 @@ const buttonVariants = {
         background: colors.gray20,
         color: colors.text,
     },
+    success: {
+        background: colors.green,
+        color: colors.base
+    }
 }
 const Button = styled.button(
     {
@@ -53,8 +57,8 @@ const Button = styled.button(
 const CircleButton = styled.button({
     borderRadius: '30px',
     padding: '0',
-    width: '40px',
-    height: '40px',
+    width: '30px',
+    height: '30px',
     lineHeight: '1',
     display: 'flex',
     alignItems: 'center',
@@ -82,11 +86,11 @@ const Dialog = styled(ReachDialog)({
     zIndex: "100",
     width: "450px",
     backgroundColor: "white",
-    // maxWidth: '450px',
+    maxWidth: '450px',
     borderRadius: '3px',
     paddingBottom: '3.5em',
     boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
-    // margin: '20vh auto',
+    margin: '0 auto',
     [bp.small]: {
         width: '100%',
         margin: '10vh auto',
@@ -162,4 +166,12 @@ const Link = styled(RouterLink)({
     },
 })
 
-export {FormGroup, Input, Button, Spinner, Dialog, CircleButton, FullPageSpinner, FullPageErrorFallback, ErrorMessage, Link}
+const BookListUL = styled.ul({
+    listStyle: 'none',
+    padding: '0',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gridGap: '1em',
+})
+
+export {FormGroup, Input, Button, Spinner, Dialog, CircleButton, FullPageSpinner, FullPageErrorFallback, ErrorMessage, Link, BookListUL}

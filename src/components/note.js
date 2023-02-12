@@ -3,8 +3,9 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
-import {CircleButton} from "./lib";
-import {FaTrashAlt} from "react-icons/fa";
+import {CircleButton, Input} from "./lib";
+import {FaEdit, FaRegSave, FaRegTrashAlt} from "react-icons/fa";
+import {GiCancel} from "react-icons/gi"
 
 
 function Note({note, deleteNote, updateNote}) {
@@ -28,14 +29,25 @@ function Note({note, deleteNote, updateNote}) {
             }
         }}>
             <p>{note.note_text}</p>
-            <CircleButton onClick={deleteNote} css={{backgroundColor: "red "}}><FaTrashAlt/></CircleButton>
-            <button onClick={deleteNote}><FaTrashAlt/></button>
-            {!isEditMode && <button onClick={() => setIsEditMode(true)}>edit</button>}
+            <CircleButton onClick={deleteNote} css={{
+                backgroundColor: "#c83f44",
+                width: "10px",
+                height: "10px"
+            }}><FaRegTrashAlt/></CircleButton>
+            {!isEditMode && <CircleButton onClick={() => setIsEditMode(true)} css={{
+                backgroundColor: "#427eca",
+                width: "10px",
+                height: "10px"
+            }}><FaEdit/></CircleButton>}
 
             {
-                isEditMode && <div><input type="text" ref={noteRef} defaultValue = {note.note_text}/>
-                    <button onClick={updateNoteHandler}>update</button>
-                    <button onClick={() => setIsEditMode(false)}> cancel</button>
+                isEditMode && <div><Input type="text" ref={noteRef} defaultValue={note.note_text}/>
+                    <div css={{display: "flex", gap: "4px", justifyContent: "flex-end", marginTop: "5px"}}>
+                        <CircleButton onClick={updateNoteHandler}
+                                      css={{backgroundColor: "#427eca"}}><FaRegSave/></CircleButton>
+                        <CircleButton onClick={() => setIsEditMode(false)}
+                                      css={{backgroundColor: "#9ba4bc"}}><GiCancel/></CircleButton>
+                    </div>
                 </div>
             }
 

@@ -5,17 +5,22 @@ import {jsx} from '@emotion/core'
 import * as React from 'react';
 import {useNavigate, useParams} from "react-router";
 
-import {FullPageSpinner} from "../components/lib";
+import {Button, FullPageSpinner} from "../components/lib";
 import Note from "../components/note";
+import EventForm from "../components/event-form";
+import {Modal, ModalContents, ModalOpenButton, ModalDismissButton} from "../components/modal";
+import {StatusButton} from "../components/status-buttons";
+import {FaCheckCircle} from "react-icons/fa";
+import {BiMessageAdd} from "react-icons/bi"
 
 import {useBook} from "../queries/book";
-import {useNoteCreate, useNoteUpdate, useNoteDelete} from "../queries/note";
+import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
 import {useEventCreate} from "../queries/event";
-
+import * as colors from "../styles/colors";
+import "@reach/dialog/styles.css";
 
 
 function BookScreen() {
-    const [toggleEventForm, setToggleEventForm] = React.useState(false)
     const forceUpdate = React.useState({})[1].bind(null, {})
     const noteRef = React.useRef()
     const navigate = useNavigate()
@@ -27,8 +32,6 @@ function BookScreen() {
     const createNote = useNoteCreate(bookId)
     const updateNote = useNoteUpdate(book)
     const deleteNote = useNoteDelete(book)
-
-
 
     const createNoteHandler = async () => {
         if (noteRef.current.value.length === 0) {
@@ -42,7 +45,7 @@ function BookScreen() {
 
 
     const updateNoteHandler = (note) => {
-        if(updateNote.isLoading) return <div>Loading...</div>
+        if (updateNote.isLoading) return <div>Loading...</div>
         updateNote.mutate({note})
     }
 
@@ -60,11 +63,12 @@ function BookScreen() {
             title: title.value,
             event_date: date.value,
             city: city.value,
-            by_invitation:invitation.checked,
+            by_invitation: invitation.checked,
             age_regulation: ageRegulation.checked
         }
 
         createEvent.mutate({...data})
+
     }
 
 
@@ -74,9 +78,23 @@ function BookScreen() {
 
 
     return (
-        <div>
+        <div css={{
+            position: "relative",
+            border: `1px solid ${colors.gray20}`,
+            color: colors.text,
+            minHeight: 600,
+            padding: '1.25em',
+            borderRadius: '3px',
+            h1: {
+                fontSize: "40px"
+            },
+            h3: {
+                fontStyle: "italic",
+                fontSize: "22px"
+            }
+        }}>
             <h1>{book?.title}</h1>
-            <p><b>Author:</b> {book.author?.full_name}</p>
+            <h3>by {book.author?.full_name}</h3>
             <p>
                 <b>Genres:</b>
                 {
@@ -111,39 +129,38 @@ function BookScreen() {
 
             {
                 book?.event_id ? (
-                    <button onClick={() => navigate(`../event/${book.event_id}`)}>
+                    <Button onClick={() => navigate(`../event/${book.event_id}`)}>
                         open event
-                    </button>
+                    </Button>
                 ) : (
-                    <div>
-                        {
-                            !toggleEventForm ?
-                                <button onClick={() => setToggleEventForm(true)}>create event</button> : (
-                                    <form onSubmit={onEventSubmit} css={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "5px",
-                                        width: "200px"
-                                    }}>
-                                        <input type="text" placeholder="event title" id="title"/>
-                                        <input type="date" placeholder="" id="date"/>
-                                        <input type="city" placeholder="enter city" id="city"/>
-                                        <label>
-                                            by invitation
-                                            <input type="checkbox" id="invitation"/>
-                                        </label>
-                                        <label>
-                                            age regulation
-                                            <input type="checkbox" id="ageRegulation"/>
-                                        </label>
-                                        <button>save</button>
-                                        <button onClick={() => setToggleEventForm(false)}>cancel</button>
-                                    </form>
-                                )
-                        }
-                    </div>
+
+                    <Modal>
+                        <ModalOpenButton>
+                            <Button variant="success">Add event</Button>
+                        </ModalOpenButton>
+                        <ModalContents title="Add Event" offCancel={true} aria-label="event form">
+                            <EventForm onSubmit={onEventSubmit} isLoading={createEvent.isLoading} />
+                        </ModalContents>
+                    </Modal>
                 )
             }
+            <div
+                css={{
+                    position: 'absolute',
+                    right: -20,
+                    top: 20,
+                    color: colors.gray80,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-around',
+                }}
+            >
+                {
+                    book.note ?
+                        <StatusButton icon={<FaCheckCircle css={{width: "25px", height: "25px"}}/>} size={"45px"}/> :
+                        <StatusButton icon={<BiMessageAdd css={{width: "20px", height: "20px", color: "gray"}}/>} size={"40px"} label="add note"/>
+                }
+            </div>
         </div>
     );
 }
