@@ -2,14 +2,19 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react';
 
 import {useNavigate, useParams} from "react-router";
 import {useEventDelete, useEventFetch, useEventUpdate} from "../queries/event";
+import {CircleButton, FullPageSpinner} from "../components/lib";
+import EventForm from "../components/event-form";
+import Confirmation from "../components/confirmation";
+import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
+import {BsShieldCheck, BsShieldSlash} from "react-icons/bs"
+import {Modal, ModalContents, ModalOpenButton} from "../components/modal";
+import "@reach/dialog/styles.css";
 
 
 function EventScreen() {
-    const [isEditMode, setIsEditMode] = React.useState(false)
     const navigate = useNavigate()
     const {eventId} = useParams()
 
@@ -37,10 +42,9 @@ function EventScreen() {
         }
 
         updateEvent.mutate({...data})
-        setIsEditMode(false)
     }
 
-    if (isEventLoading) return <div>Loading...</div>
+    if (isEventLoading) return <FullPageSpinner/>
 
     return (
         <div>
@@ -51,10 +55,14 @@ function EventScreen() {
             <p><b>Date:</b> {event?.event_date}</p>
             <p><b>Location:</b> {event?.city}</p>
             <p>
-                {event.terms?.by_invitation ? "By invitation" : "No invitation needed"}
+                By invitation {event.terms?.by_invitation ?
+                <BsShieldCheck css={{color: "green", width: "25px", height: "25px"}}/> :
+                <BsShieldSlash css={{color: "red", width: "25px", height: "25px"}}/>}
             </p>
             <p>
-                {event.terms?.age_regulation ? "Age regulated" : "No age regulation"}
+                Age regulation {event.terms?.age_regulation ?
+                <BsShieldCheck css={{color: "green", width: "25px", height: "25px"}}/> :
+                <BsShieldSlash css={{color: "red", width: "25px", height: "25px"}}/>}
             </p>
 
             <div>
@@ -64,36 +72,37 @@ function EventScreen() {
                             display: "flex",
                             gap: "10px"
                         }}>
-                            <button onClick={() => setIsEditMode(true)}>edit</button>
-                            <button onClick={eventDeleteHandler}>del</button>
+                            <Modal>
+                                <ModalOpenButton>
+                                    <CircleButton css={{
+                                        display: "flex",
+                                        gap: "5px",
+                                        backgroundColor: "#ce4646",
+                                        width: "120px",
+                                        height: "30px"
+                                    }}><FaRegTrashAlt/>Delete</CircleButton>
+                                </ModalOpenButton>
+                                <ModalContents title="Are you sure?" offCancel={true} aria-label="event form">
+                                        <Confirmation deleteHandler={eventDeleteHandler}/>
+                                </ModalContents>
+                            </Modal>
                         </div>
                     )
                 }
 
-                {
-                    isEditMode && (
-                        <form onSubmit={eventUpdateHandler} css={{
+                <Modal>
+                    <ModalOpenButton>
+                        <CircleButton css={{
                             display: "flex",
-                            flexDirection: "column",
                             gap: "5px",
-                            width: "200px"
-                        }}>
-                            <input type="text" placeholder="event title" id="title" defaultValue={event.title}/>
-                            <input type="date" placeholder="" id="date" defaultValue={event.event_date}/>
-                            <input type="city" placeholder="enter city" id="city" defaultValue={event.city}/>
-                            <label>
-                                by invitation
-                                <input type="checkbox" id="invitation" defaultChecked={event.terms.age_regulation}/>
-                            </label>
-                            <label>
-                                age regulation
-                                <input type="checkbox" id="ageRegulation" defaultChecked={event.terms.age_regulation}/>
-                            </label>
-                            <button>save</button>
-                            <button onClick={() => setIsEditMode(false)}>cancel</button>
-                        </form>
-                    )
-                }
+                            backgroundColor: "#427eca",
+                            width: "120px",
+                        }}><FaEdit/>Edit</CircleButton>
+                    </ModalOpenButton>
+                    <ModalContents title="Edit Event" offCancel={true} aria-label="event form">
+                        <EventForm onSubmit={eventUpdateHandler} isLoading={updateEvent.isLoading} event={event}/>
+                    </ModalContents>
+                </Modal>
             </div>
         </div>
     );
