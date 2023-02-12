@@ -3,13 +3,12 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
-import {Link} from "react-router-dom"
 import {useBooks, useBooksNextPage, useBooksPrevPage, useTags} from "../queries/book";
 
 import Pagination from "../components/pagination";
 import BookItem from "../components/book-item";
 import Select from "react-select";
-
+import {BookListUL} from "../components/lib";
 
 
 function BooksListScreen() {
@@ -34,8 +33,7 @@ function BooksListScreen() {
     }, [selectedTags])
 
 
-
-    if(isLoading) {
+    if (isLoading) {
         return <div>Loading...</div>
     }
 
@@ -50,16 +48,19 @@ function BooksListScreen() {
                 <Select placeholder="Filter by genre" onChange={setSelectedTags}
                         options={tags} value={selectedTags} isMulti/>
 
-                {
-                    books.results.map((book) => (
-                        <Link to={`/book/${book.id}`} css={{textDecoration: "none"}} key={book.id}>
-                            <BookItem book={book}/>
-                        </Link>
-                    ))
-                }
+                <BookListUL>
+                    {
+                        books.results.map((book) => (
+                            <li key={book.id} >
+                                <BookItem book={book}/>
+                            </li>
+                        ))
+                    }
+                </BookListUL>
             </div>
 
-            <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPreviousPage} nextPage={nextPage} prevPage={prevPage}/>
+            <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPreviousPage} nextPage={nextPage}
+                        prevPage={prevPage}/>
         </div>
     );
 }

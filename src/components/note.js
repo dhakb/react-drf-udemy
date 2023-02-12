@@ -3,6 +3,8 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
+import {CircleButton} from "./lib";
+import {FaTrashAlt} from "react-icons/fa";
 
 
 function Note({note, deleteNote, updateNote}) {
@@ -26,8 +28,8 @@ function Note({note, deleteNote, updateNote}) {
             }
         }}>
             <p>{note.note_text}</p>
-
-            <button onClick={deleteNote}>del</button>
+            <CircleButton onClick={deleteNote} css={{backgroundColor: "red "}}><FaTrashAlt/></CircleButton>
+            <button onClick={deleteNote}><FaTrashAlt/></button>
             {!isEditMode && <button onClick={() => setIsEditMode(true)}>edit</button>}
 
             {
