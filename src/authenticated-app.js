@@ -19,7 +19,7 @@ import {AuthorBooksScreen} from "./screens/author-books";
 import {EventScreen} from "./screens/event";
 import {AuthorScreen} from "./screens/author"
 
-
+git
 function AuthenticatedApp() {
     const {logout} = useAuthContext()
 
@@ -84,7 +84,7 @@ function NavLink(props) {
                 },
                 match
                     ? {
-                        borderLeft: `5px solid ${colors.indigo}`,
+                        borderLeft: `5px solid ${colors.brown}`,
                         background: colors.gray10,
                         ':hover,:focus': {
                             background: colors.gray10,

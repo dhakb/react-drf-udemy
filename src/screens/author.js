@@ -1,7 +1,11 @@
-import * as React from 'react';
-import {useParams, useNavigate} from "react-router-dom";
-import {useAuthor} from "../queries/author";
+/** @jsx jsx */
+/** @jsxRuntime classic */
+import {jsx} from '@emotion/core'
 
+import {useNavigate, useParams} from "react-router-dom";
+import {useAuthor} from "../queries/author";
+import {FullPageSpinner, Button} from "../components/lib";
+import * as colors from "../styles/colors";
 
 
 function AuthorScreen() {
@@ -10,21 +14,53 @@ function AuthorScreen() {
     const {isLoading, data: author} = useAuthor(authorId)
 
 
-    if(isLoading) {
-        return <div>Loading...</div>
+    if (isLoading) {
+        return <FullPageSpinner/>
     }
 
     return (
-        <div>
-            <h1>{author.first_name}, {author.last_name}</h1>
-            <p><b>Date of birth:</b> {author.date_of_birth}</p>
-            <p><b>Books count written by:</b> {author.total_books}</p>
-            <p><b>Note:</b> {author.note}</p>
+        <div css={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            position: "relative",
+            border: `1px solid ${colors.gray20}`,
+            color: colors.text,
+            minHeight: 400,
+            padding: '1.25em',
+            borderRadius: '3px',
+            h1: {
+                fontSize: "40px"
+            },
+            h3: {
+                fontStyle: "italic",
+                fontSize: "22px"
+            },
+            "div > div": {
+                fontStyle: "italic"
+            },
+            "div: nth-of-type(2)": {
+                fontSize: "15px",
+                p: {
+                    margin: 0,
+                },
+                Button: {
+                    marginTop: "3px"
+                }
+            }
+        }}>
+            <div>
+                <h1>{author.first_name}, {author.last_name}</h1>
+                <div>Birth date: {new Date(author.date_of_birth).toDateString().slice(4)}</div>
+            </div>
 
-            <button onClick={() => navigate("./books")}>Books by author</button>
-
+            <div>
+                <p>Total books: {author.total_books}</p>
+                <Button onClick={() => navigate("./books")}>List author's books</Button>
+            </div>
         </div>
     );
 }
+
 
 export {AuthorScreen};

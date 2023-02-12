@@ -4,9 +4,11 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react';
 
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
+import {FullPageSpinner} from "../components/lib";
 import {useAuthorBooks, useAuthorsNextPage, useAuthorsPrevPage} from "../queries/author";
 import Pagination from "../components/pagination";
+import AuthorBookItem from "../components/authorbook-item";
 
 
 function AuthorBooksScreen() {
@@ -34,30 +36,32 @@ function AuthorBooksScreen() {
 
 
     if(isLoading) {
-        return <div>Loading...</div>
+        return <FullPageSpinner/>
     }
 
     return (
         <div>
             <h1>Boooks by</h1>
-
-            <select value={limit} onChange={(e) => setLimit(e.target.value)} >
+            <label htmlFor="limit" css={{marginRight: "8px"}}>Show per page</label>
+            <select value={limit} onChange={(e) => setLimit(e.target.value)} css={{
+                width: "100px",
+            }} id="limit">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
             </select>
 
-            <ul>
+            <ul css={{
+                marginTop: "20px",
+                listStyle: 'none',
+                padding: '0',
+                display: 'grid',
+                gridTemplateRows: 'repeat(auto-fill, minmax(0px, 1fr))',
+                gridGap: '1em',
+            }}>
                 {books.results?.map(book => (
                     <li key={book.id}>
-                        <Link to={`/book/${book.id}`}>
-                            <h3>{book?.title}</h3>
-                        </Link>
-                        {
-                            book?.tags.map((tag) => (
-                                <span key={tag + book.id}>{tag}</span>
-                            ))
-                        }
+                        <AuthorBookItem book={book}/>
                     </li>
                 ))}
             </ul>
