@@ -2,23 +2,21 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-import * as React from "react"
 
+import {Button} from "./lib";
+import {usePageNumber} from "../utils/usePageNumber";
 
 
 function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {
-    const [pageNumber, setPageNumber] = React.useState(1)
+    const pageNumber = usePageNumber(prevPage, nextPage)
 
 
     const nextPageHandler = () => {
-        setPageNumber((prev) => prev + 1);
-        fetchNextPage().then(() => console.log("success nextfetching"))
+        fetchNextPage().catch(console.log)
     };
 
-
     const prevPageHandler = () => {
-        setPageNumber((prev) => prev - 1);
-        fetchPrevPage().then(() => console.log("success prevfetching"))
+        fetchPrevPage().catch(console.log)
     };
 
 
@@ -27,16 +25,23 @@ function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {
             display: "flex",
             gap: "30px",
             justifyContent: "center",
-            marginTop: "15px"
+            marginTop: "15px",
+            "#pageBtn": {
+                ":disabled": {
+                    border: "1px solid #999999",
+                    backgroundColor: "#cccccc",
+                    color: "#666666",
+                }
+            }
         }}
         >
-            <button onClick={prevPageHandler} className="bt btn-success" disabled={!prevPage}>
+            <Button onClick={prevPageHandler} id="pageBtn" disabled={!prevPage}>
                 Prev
-            </button>
+            </Button>
             <p>{pageNumber}</p>
-            <button onClick={nextPageHandler} className="bt btn-success" disabled={!nextPage}>
+            <Button onClick={nextPageHandler} id="pageBtn" disabled={!nextPage}>
                 Next
-            </button>
+            </Button>
         </div>
     );
 };
