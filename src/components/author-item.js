@@ -4,10 +4,11 @@ import {jsx} from '@emotion/core'
 
 import {Link} from "react-router-dom";
 import * as colors from "../styles/colors"
+import {StatusButton} from "./status-buttons";
+import {FaCheckCircle} from "react-icons/fa";
 
 
 function AuthorItem({author}) {
-
     return (
         <div
             css={{
@@ -53,6 +54,20 @@ function AuthorItem({author}) {
                     <div id="totalBooks">Total books: {author.total_books}</div>
                 </div>
             </Link>
+            <div
+                css={{
+                    position: 'absolute',
+                    right: -10,
+                    color: colors.gray80,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-around',
+                }}
+            >
+                {/*{*/}
+                {/*    author.is_noted && <StatusButton icon={<FaCheckCircle />} size={"30px"}/>*/}
+                {/*}*/}
+            </div>
         </div>
     )
 }

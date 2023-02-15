@@ -8,7 +8,7 @@ import {useNavigate, useParams} from "react-router";
 import {Button, FullPageSpinner} from "../components/lib";
 import Note from "../components/note";
 import EventForm from "../components/event-form";
-import {Modal, ModalContents, ModalOpenButton, ModalDismissButton} from "../components/modal";
+import {Modal, ModalContents, ModalOpenButton} from "../components/modal";
 import {StatusButton} from "../components/status-buttons";
 import {FaCheckCircle} from "react-icons/fa";
 import {BiMessageAdd} from "react-icons/bi"
@@ -21,7 +21,6 @@ import "@reach/dialog/styles.css";
 
 
 function BookScreen() {
-    const forceUpdate = React.useState({})[1].bind(null, {})
     const noteRef = React.useRef()
     const navigate = useNavigate()
     const {bookId} = useParams()
@@ -29,9 +28,9 @@ function BookScreen() {
     //React-Query /custom hooks
     const {data: book, isLoading} = useBook(bookId)
     const createEvent = useEventCreate(bookId)
-    const createNote = useNoteCreate(bookId)
-    const updateNote = useNoteUpdate(book)
-    const deleteNote = useNoteDelete(book)
+    const createNote = useNoteCreate({endpoint: `book/${bookId}`, queryKey: ["book", {bookId}]})
+    const updateNote = useNoteUpdate({noteId: book?.note?.id, queryKey: ["book", {bookId}]})
+    const deleteNote = useNoteDelete({noteId: book?.note?.id, queryKey: ["book", {bookId}]})
 
     const createNoteHandler = async () => {
         if (noteRef.current.value.length === 0) {
@@ -117,7 +116,7 @@ function BookScreen() {
             }}>
                 <h4>Note:</h4>
                 {
-                    book?.note ? <Note note={book.note} forceUpdate={forceUpdate}
+                    book?.note ? <Note note={book.note}
                                        deleteNote={deleteNoteHandler}
                                        updateNote={updateNoteHandler}/> :
                         <div>

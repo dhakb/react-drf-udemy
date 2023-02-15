@@ -1,29 +1,29 @@
 import {useMutation, useQueryClient} from "react-query";
-import {useApiClient} from "../utils/api-client";
+import {useApiClient} from "../utils/useApiClient";
 
 
-function useNoteCreate(bookId) {
+function useNoteCreate({endpoint, queryKey}) {
     const queryClient = useQueryClient()
     const postNote = useApiClient()
-    return useMutation((data) => postNote(`note/book/${bookId}/`, {method: "POST", body: data}), {
-        onSuccess: () => queryClient.invalidateQueries(["book", {bookId}]),
+    return useMutation((data) => postNote(`note/${endpoint}/`, {method: "POST", body: data}), {
+        onSuccess: () => queryClient.invalidateQueries(queryKey),
         // onSuccess: (res) => queryClient.setQueryData(["book", {bookId}], (oldData => ({...oldData, note: {...res.data, note_text: res.data.note}})))
     })
 }
 
-function useNoteUpdate(book) {
+function useNoteUpdate({noteId, queryKey}) {
     const queryClient = useQueryClient()
     const editNote = useApiClient()
-    return useMutation((data) => editNote(`note/${book.note.id}/`, {method: "PUT", body: data}), {
-        onSuccess: () => queryClient.invalidateQueries(["book", {bookId: book.id}])
+    return useMutation((data) => editNote(`note/${noteId}/`, {method: "PUT", body: data}), {
+        onSuccess: () => queryClient.invalidateQueries(queryKey)
     })
 }
 
-function useNoteDelete(book) {
+function useNoteDelete({noteId, queryKey}) {
     const queryClient = useQueryClient()
     const deleteNote = useApiClient()
-    return useMutation(() => deleteNote(`note/${book.note.id}`, {method: "DELETE"}), {
-        onSuccess: () => queryClient.invalidateQueries(["book", {bookId: book.id}])
+    return useMutation(() => deleteNote(`note/${noteId}`, {method: "DELETE"}), {
+        onSuccess: () => queryClient.invalidateQueries(queryKey)
     })
 }
 

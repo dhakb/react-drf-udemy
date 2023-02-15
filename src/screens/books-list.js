@@ -4,23 +4,27 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react';
 import {useBooks, useBooksNextPage, useBooksPrevPage, useTags} from "../queries/book";
+import {usePageNumber} from "../utils/usePageNumber";
+import {BookListUL} from "../components/lib";
 
 import Pagination from "../components/pagination";
 import BookItem from "../components/book-item";
 import Select from "react-select";
-import {BookListUL} from "../components/lib";
 
 
 function BooksListScreen() {
     const [nextPage, setNextPage] = React.useState(null)
     const [prevPage, setPrevPage] = React.useState(null)
     const [selectedTags, setSelectedTags] = React.useState([])
+    const pageNum = usePageNumber(prevPage, nextPage)
 
     //React-Query /custom hooks
-    const {isLoading, data: books, refetch: refetchBooksList} = useBooks(selectedTags)
-    const {refetch: fetchNextPage} = useBooksNextPage(nextPage)
-    const {refetch: fetchPreviousPage} = useBooksPrevPage(prevPage)
+    const {isLoading, data: books, refetch: refetchBooksList} = useBooks(selectedTags, pageNum)
+    const {refetch: fetchNextPage} = useBooksNextPage(nextPage, pageNum)
+    const {refetch: fetchPreviousPage} = useBooksPrevPage(prevPage, pageNum)
     const {data: tags} = useTags()
+
+
 
     React.useEffect(() => {
         setNextPage(books?.next)
@@ -60,7 +64,7 @@ function BooksListScreen() {
             </div>
 
             <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPreviousPage} nextPage={nextPage}
-                        prevPage={prevPage}/>
+                        prevPage={prevPage} fetchPage={() => {}}/>
         </div>
     );
 }
