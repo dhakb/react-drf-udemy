@@ -1,5 +1,5 @@
 import {useQuery} from "react-query";
-import {useApiClient} from "../utils/api-client";
+import {useApiClient} from "../utils/useApiClient";
 
 
 

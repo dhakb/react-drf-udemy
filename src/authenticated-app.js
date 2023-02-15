@@ -116,16 +116,16 @@ function Nav(params) {
                 css={{
                     listStyle: 'none',
                     padding: '0',
+                    li: {
+                        "#navLink": {listStyle: 'none', textDecoration: 'none'},
+                    }
                 }}
             >
                 <li>
-                    <NavLink to="/books">Books</NavLink>
+                    <NavLink to="/books" id="navLink">Books</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/authors">Authors</NavLink>
-                </li>
-                <li>
-                    <NavLink to="/events">Events</NavLink>
+                    <NavLink to="/authors" id="navLink">Authors</NavLink>
                 </li>
             </ul>
         </nav>

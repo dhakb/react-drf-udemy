@@ -4,14 +4,15 @@ import {jsx} from '@emotion/core'
 
 import * as React from "react"
 import * as auth from "../utils/auth-provider"
-import {useAsync} from "../utils/hooks";
+import {useAsync} from "../utils/useAsync";
 import {FullPageErrorFallback} from "../components/lib";
-
+import {useNavigate} from "react-router-dom";
 
 const AuthContext = React.createContext()
 AuthContext.displayName = "AuthContext"
 
 function AuthProvider(props) {
+    const navigate = useNavigate()
     const {data, status, error, isLoading, isError, isSuccess, isIdle, setData, setError} = useAsync()
     // console.log({
     //     data,
@@ -25,6 +26,7 @@ function AuthProvider(props) {
     const login = (form) => auth.login(form)
         .then((res) => {
             setData(res.data)
+            navigate("/books")
             localStorage.setItem("__user_auth_token__", res?.data.access)
             return res.data
         }).catch((error) => {

@@ -9,7 +9,6 @@ import {CircleButton, FullPageSpinner} from "../components/lib";
 import EventForm from "../components/event-form";
 import Confirmation from "../components/confirmation";
 import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
-import {BsShieldCheck, BsShieldSlash} from "react-icons/bs"
 import {Modal, ModalContents, ModalOpenButton} from "../components/modal";
 import "@reach/dialog/styles.css";
 
@@ -51,18 +50,14 @@ function EventScreen() {
             <hr/>
             <h1>{event?.title}</h1>
             <hr/>
-            <p><b>book</b> {event?.book?.title}</p>
-            <p><b>Date:</b> {event?.event_date}</p>
+            <p><b>Related to book: </b> {event?.book?.title}</p>
+            <p><b>Event date:</b> {new Date(event?.event_date).toDateString().slice(4)}</p>
             <p><b>Location:</b> {event?.city}</p>
             <p>
-                By invitation {event.terms?.by_invitation ?
-                <BsShieldCheck css={{color: "green", width: "25px", height: "25px"}}/> :
-                <BsShieldSlash css={{color: "red", width: "25px", height: "25px"}}/>}
+                By invitation: {`${event.terms?.by_invitation}` ? "Yes" : "No"}
             </p>
             <p>
-                Age regulation {event.terms?.age_regulation ?
-                <BsShieldCheck css={{color: "green", width: "25px", height: "25px"}}/> :
-                <BsShieldSlash css={{color: "red", width: "25px", height: "25px"}}/>}
+                Age regulation: {`${event.terms?.age_regulation}` ? "Yes" : "No"}
             </p>
 
             <div>
@@ -77,13 +72,13 @@ function EventScreen() {
                                     <CircleButton css={{
                                         display: "flex",
                                         gap: "5px",
-                                        backgroundColor: "#ce4646",
-                                        width: "120px",
+                                        backgroundColor: "#e1d2d2",
+                                        width: "100px",
                                         height: "30px"
                                     }}><FaRegTrashAlt/>Delete</CircleButton>
                                 </ModalOpenButton>
                                 <ModalContents title="Are you sure?" offCancel={true} aria-label="event form">
-                                        <Confirmation deleteHandler={eventDeleteHandler}/>
+                                    <Confirmation deleteHandler={eventDeleteHandler}/>
                                 </ModalContents>
                             </Modal>
                         </div>
@@ -95,8 +90,8 @@ function EventScreen() {
                         <CircleButton css={{
                             display: "flex",
                             gap: "5px",
-                            backgroundColor: "#427eca",
-                            width: "120px",
+                            backgroundColor: "#adb9cc",
+                            width: "100px",
                         }}><FaEdit/>Edit</CircleButton>
                     </ModalOpenButton>
                     <ModalContents title="Edit Event" offCancel={true} aria-label="event form">

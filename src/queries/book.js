@@ -1,5 +1,5 @@
 import {useQuery} from "react-query"
-import {useApiClient} from "../utils/api-client";
+import {useApiClient} from "../utils/useApiClient";
 
 
 function useBook(bookId) {
@@ -11,12 +11,14 @@ function useBook(bookId) {
 }
 
 
-function useBooks(selectedTags) {
-    let endpoint = selectedTags ? `book/?tags=${selectedTags.reduce((acc, curr) => [...acc, curr.value], []).join()}` : "book/"
+function useBooks(selectedTags, pageNum) {
+    let endpoint = selectedTags.length ? `book/?tags=${selectedTags.reduce((acc, curr) => [...acc, curr.value], []).join()}` : "book/"
     const fetchBooks = useApiClient()
     return useQuery({
+        // queryKey: ["books", {pageNum}],
         queryKey: "books",
-        queryFn: () => fetchBooks(endpoint, {method: "GET"}).then(res => res.data)
+        queryFn: () => fetchBooks(endpoint, {method: "GET"}).then(res => res.data),
+        // keepPreviousData: true
     },)
 }
 
@@ -32,21 +34,39 @@ function useTags() {
 }
 
 
-function useBooksNextPage(page) {
+function useBooksNextPage(page, pageNum) {
     const fetchPage = useApiClient()
+    // console.log("useBooksNext", pageNum)
     return useQuery({
+        // queryKey: ["books", {pageNum}],
         queryKey: "books",
-        queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then(res => res.data)
+        queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then(res => res.data),
+        // keepPreviousData: true
     })
 }
 
 
-function useBooksPrevPage(page) {
+function useBooksPrevPage(page, pageNum) {
     const fetchPage = useApiClient()
+    // console.log("useBooksPrev", pageNum)
     return useQuery({
+        // queryKey: ["books", {pageNum}],
         queryKey: "books",
-        queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then(res => res.data)
+        queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then(res => res.data),
+        // keepPreviousData: true
     })
 }
+
+// function useBooksTest({selectedTags, page}) {
+//     const fetchPage = useApiClient()
+//     let endpoint = selectedTags.length ? `book/?tags=${selectedTags.reduce((acc, curr) => [...acc, curr.value], []).join()}` : "book/"
+//     if(page) {
+//         endpoint = page
+//     }
+//     return useQuery({
+//         queryKey: "books",
+//         queryFn: () => fetchPage(endpoint, {method: "GET", pagination: true}).then(res => res.data)
+//     })
+// }
 
 export {useBook, useBooks, useTags, useBooksNextPage, useBooksPrevPage}

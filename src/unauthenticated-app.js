@@ -5,7 +5,7 @@ import {jsx} from '@emotion/core'
 import * as React from "react"
 import {Button, FormGroup, Input, Spinner, ErrorMessage} from "./components/lib";
 import {Modal, ModalContents, ModalOpenButton} from "./components/modal";
-import {useAsync} from "./utils/hooks";
+import {useAsync} from "./utils/useAsync";
 import {useAuthContext} from "./context/auth-context";
 import Logo from "./components/logo"
 
