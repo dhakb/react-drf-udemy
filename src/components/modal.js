@@ -11,11 +11,10 @@ const callAll =
         (...args) =>
             fns.forEach(fn => fn && fn(...args))
 
-const ModalContext = React.createContext(null)
+const ModalContext = React.createContext([false, () => {}])
 
-function Modal(props) {
+function ModalProvider(props) {
     const [isOpen, setIsOpen] = React.useState(false)
-
     return <ModalContext.Provider value={[isOpen, setIsOpen]} {...props}/>
 }
 
@@ -64,4 +63,4 @@ function ModalContents({title, children, offCancel, ...props}) {
 }
 
 
-export {Modal, ModalDismissButton, ModalOpenButton, ModalContents}
+export {ModalProvider, ModalDismissButton, ModalOpenButton, ModalContents, ModalContext}

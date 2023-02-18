@@ -7,7 +7,6 @@ import {ModalDismissButton} from "./modal";
 
 
 function EventForm({onSubmit, isLoading, event = {}}) {
-
     return (
         <form onSubmit={onSubmit} css={{
             display: 'flex',
@@ -40,8 +39,7 @@ function EventForm({onSubmit, isLoading, event = {}}) {
                 <label htmlFor="ageRegulation">age regulation</label>
             </FormGroup>
             <div css={{display: "flex", flexDirection: "column", gap: "5px"}}>
-                <Button type="submit">{ !isLoading ? "save" : <Spinner/>}</Button>
-
+                <Button type="submit">{!isLoading ? "save" : <Spinner css={{height: "12px"}}/>}</Button>
                 <ModalDismissButton>
                     <Button variant="secondary">cancel</Button>
                 </ModalDismissButton>

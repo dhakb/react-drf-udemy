@@ -5,7 +5,7 @@ function useEventCreate(bookId) {
     const queryClient = useQueryClient()
     const createEvent = useApiClient()
     return useMutation((data) => createEvent(`event/`, {method: "POST", body: data}), {
-        onSuccess: () => queryClient.invalidateQueries(["book", {bookId}])
+        onSuccess: () => queryClient.invalidateQueries(["book", {bookId}]),
     })
 }
 
@@ -13,7 +13,10 @@ function useEventFetch(eventId) {
     const fetchEvent = useApiClient()
     return useQuery({
         queryKey: ["event", {eventId}],
-        queryFn: () => fetchEvent(`event/${eventId}`, {method: "GET"}).then(res => res.data)
+        queryFn: () => {
+            console.log("async trigger")
+            return fetchEvent(`event/${eventId}`, {method: "GET"}).then(res => res.data)
+        }
     })
 }
 
