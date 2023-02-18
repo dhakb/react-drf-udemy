@@ -2,9 +2,12 @@ import * as React from "react"
 
 import {FullPageSpinner} from "./components/lib";
 import {useAuthContext} from "./context/auth-context";
-import AuthenticatedApp from "./authenticated-app";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const UnauthenticatedApp = React.lazy(() => import("./unauthenticated-app"))
+const AuthenticatedApp = React.lazy(() => import("./authenticated-app"))
+
 
 function App() {
     const {data: user} = useAuthContext()
@@ -23,6 +26,16 @@ function App() {
 
     return (
         <React.Suspense fallback={<FullPageSpinner/>}>
+            <ToastContainer position="top-right"
+                            autoClose={5000}
+                            hideProgressBar={true}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="light"/>
             {
                 isUser ? <AuthenticatedApp/> : <UnauthenticatedApp/>
             }

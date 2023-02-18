@@ -3,24 +3,30 @@
 import {jsx} from '@emotion/core'
 
 import * as React from "react"
-import {Button, FormGroup, Input, Spinner, ErrorMessage} from "./components/lib";
-import {Modal, ModalContents, ModalOpenButton} from "./components/modal";
-import {useAsync} from "./utils/useAsync";
+import {Button, FormGroup, Input, Spinner} from "./components/lib";
+import {ModalContents, ModalOpenButton, ModalProvider} from "./components/modal";
+import {setNotification} from "./utils/setNotification";
 import {useAuthContext} from "./context/auth-context";
+import {useForm} from "react-hook-form";
+import {useAsync} from "./utils/useAsync";
 import Logo from "./components/logo"
+import "@reach/dialog/styles.css";
+
 
 const LoginForm = ({onSubmit, submitButton}) => {
     const {isError, isLoading, error, run} = useAsync()
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        const {username, password} = e.target.elements
+    const {register, handleSubmit, formState: {errors}} = useForm()
 
-        run(onSubmit({username: username.value, password: password.value}))
+    React.useEffect(() => {
+        isError && setNotification({data: error.response.data})
+    }, [isError])
+
+    const submitForm = ({username, password}) => {
+        run(onSubmit({username, password}))
     }
 
-
     return (
-        <form onSubmit={handleSubmit}
+        <form onSubmit={handleSubmit(submitForm)}
               css={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -30,47 +36,62 @@ const LoginForm = ({onSubmit, submitButton}) => {
                       width: '100%',
                       maxWidth: '300px',
                   },
+                  "#input-error-message": {
+                      color: "#8e0202",
+                  }
               }}
         >
             <FormGroup>
                 <label htmlFor="username">Username</label>
-                <Input id="username"/>
+                <Input name="username" type="text" {...register("username", {required: true})}/>
+                {
+                    errors.username && <span id="input-error-message">This field may not be blank!</span>
+                }
             </FormGroup>
             <FormGroup>
                 <label htmlFor="password">Password</label>
-                <Input id="password"/>
+                <Input name="password" type="password" {...register("password", {required: true})}/>
+                {
+                    errors.password && <span id="input-error-message">This field may not be blank!</span>
+                }
             </FormGroup>
 
             <div>
                 {
-                    React.cloneElement(submitButton, {type: "submit"}, ...(Array.isArray(submitButton.props.children) ? submitButton.props.children : [submitButton.props.children]), isLoading &&
-                        <Spinner css={{marginLeft: 5}}/>)
+                    React.cloneElement(submitButton, {type: "submit"},
+                        ...(Array.isArray(submitButton.props.children) ? submitButton.props.children : [submitButton.props.children]),
+                        isLoading && <Spinner css={{marginLeft: 10, height: "12px"}}/>)
                 }
             </div>
-            {isError && <ErrorMessage error={error}/>}
         </form>
     )
 }
 
 const RegisterForm = ({onSubmit, submitButton}) => {
     const {isLoading, isError, error, run} = useAsync()
+    console.log("__server ERROR", error)
+    const {register, handleSubmit, formState: {errors}} = useForm()
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        const {firstname, lastname, email, username, password, passwordConfirm} = e.target.elements
 
+    React.useEffect(() => {
+        isError && setNotification({data: error.response.data})
+    }, [isError])
+
+
+    const submitForm = ({firstname, lastname, email, username, password, passwordConfirm}) => {
         run(onSubmit({
-            firstname: firstname.value,
-            lastname: lastname.value,
-            email: email.value,
-            username: username.value,
-            password: password.value,
-            passwordConfirm: passwordConfirm.value
-        })).catch(console.log)
+            firstname,
+            lastname,
+            email,
+            username,
+            password,
+            passwordConfirm
+        }))
     }
 
+
     return (
-        <form onSubmit={handleSubmit}
+        <form onSubmit={handleSubmit(submitForm)}
               css={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -83,31 +104,57 @@ const RegisterForm = ({onSubmit, submitButton}) => {
                           textTransform: "capitalize"
                       }
                   },
+                  "#input-error-message": {
+                      color: "#8e0202",
+                  }
               }}
         >
             <FormGroup>
                 <label htmlFor="firstname">firstname</label>
-                <Input id="firstname"/>
+                <Input name="firstname" {...register("firstname", {required: true})}/>
+                {
+                    errors.firstname && <span id="input-error-message">This field may not be blank!</span>
+                }
             </FormGroup>
             <FormGroup>
                 <label htmlFor="lastname">lastname</label>
-                <Input id="lastname"/>
+                <Input name="lastname" {...register("lastname", {required: true})}/>
+                {
+                    errors.lastname && <span id="input-error-message">This field may not be blank!</span>
+                }
             </FormGroup>
             <FormGroup>
                 <label htmlFor="username">username</label>
-                <Input id="username"/>
+                <Input name="username" {...register("username", {required: true})}/>
+                {
+                    errors.username && <span id="input-error-message">This field may not be blank!</span>
+                }
             </FormGroup>
             <FormGroup>
                 <label htmlFor="email">email</label>
-                <Input id="email"/>
+                <Input name="email" {...register("email", {
+                    required: true,
+                    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+                })}/>
+                {
+                    errors.email && <span
+                        id="input-error-message">{errors.email.type === "required" ? "This field may not be blank!" : "Enter a valid Email address!"}</span>
+                }
             </FormGroup>
             <FormGroup>
                 <label htmlFor="password">Password</label>
-                <Input id="password"/>
+                <Input name="password" type="password" {...register("password", {required: true, minLength: 8})}/>
+                {
+                    errors.password && <span
+                        id="input-error-message">{errors.password.type === "required" ? "This field may not be blank!" : "Ensure this field has at least 8 characters!"}</span>
+                }
             </FormGroup>
             <FormGroup>
                 <label htmlFor="passwordConfirm">Confirm password</label>
-                <Input id="passwordConfirm"/>
+                <Input name="passwordConfirm" type="password" {...register("passwordConfirm", {required: true})}/>
+                {
+                    errors.passwordConfirm && <span id="input-error-message">This field may not be blank!</span>
+                }
             </FormGroup>
 
             <div>
@@ -116,7 +163,6 @@ const RegisterForm = ({onSubmit, submitButton}) => {
                         <Spinner css={{marginLeft: 5}}/>)
                 }
             </div>
-            {isError && <ErrorMessage error={error}/>}
         </form>
     )
 }
@@ -142,23 +188,23 @@ function UnauthenticatedApp() {
                 gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
                 gridGap: '0.75rem',
             }}>
-                <Modal>
+                <ModalProvider>
                     <ModalOpenButton>
                         <Button variant="primary">Login</Button>
                     </ModalOpenButton>
                     <ModalContents aria-label="login form" title="Login">
                         <LoginForm onSubmit={login} submitButton={<Button variant="primary">Login</Button>}/>
                     </ModalContents>
-                </Modal>
+                </ModalProvider>
 
-                <Modal>
+                <ModalProvider>
                     <ModalOpenButton>
                         <Button variant="secondary">Register</Button>
                     </ModalOpenButton>
                     <ModalContents aria-label="Registration form" title="Register">
                         <RegisterForm onSubmit={register} submitButton={<Button variant="primary">Register</Button>}/>
                     </ModalContents>
-                </Modal>
+                </ModalProvider>
             </div>
         </div>
     )
