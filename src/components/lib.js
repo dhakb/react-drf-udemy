@@ -80,7 +80,7 @@ Spinner.defaultProps = {
 
 const Dialog = styled(ReachDialog)({
     position: "absolute",
-    top: "50%",
+    top: "35%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     zIndex: "100",
@@ -127,7 +127,7 @@ function FullPageErrorFallback({error}) {
                 alignItems: 'center',
             }}
         >
-            <p>Uh oh... There's a problem. Try refreshing the app.</p>
+            <p>Something went wrong! Try refreshing the app.</p>
             <pre>{error.message}</pre>
         </div>
     )
@@ -152,7 +152,7 @@ function ErrorMessage({error, variant = 'stacked', ...props}) {
                     errorMessageVariants[variant],
                 ]}
             >
-        {error.message}
+        {error.response.data.detail}
       </pre>
         </div>
     )
@@ -174,4 +174,16 @@ const BookListUL = styled.ul({
     gridGap: '1em',
 })
 
-export {FormGroup, Input, Button, Spinner, Dialog, CircleButton, FullPageSpinner, FullPageErrorFallback, ErrorMessage, Link, BookListUL}
+export {
+    FormGroup,
+    Input,
+    Button,
+    Spinner,
+    Dialog,
+    CircleButton,
+    FullPageSpinner,
+    FullPageErrorFallback,
+    ErrorMessage,
+    Link,
+    BookListUL,
+}

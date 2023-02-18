@@ -3,21 +3,25 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
-import {CircleButton, Input} from "./lib";
+import {CircleButton, Input, Spinner} from "./lib";
 import {FaEdit, FaRegSave, FaRegTrashAlt} from "react-icons/fa";
 import {GiCancel} from "react-icons/gi"
 
 
-function Note({note, deleteNote, updateNote}) {
+function Note({note, deleteNote, updateNote, isUpdating, isDeleting}) {
     const [isEditMode, setIsEditMode] = React.useState(false)
     const noteRef = React.useRef()
-
 
     const updateNoteHandler = () => {
         updateNote(noteRef.current.value)
         noteRef.current.value = ""
-        setIsEditMode(false)
     }
+
+    React.useEffect(() => {
+        if (!isUpdating) {
+            setIsEditMode(false)
+        }
+    }, [isUpdating])
 
     return (
         <div css={{
@@ -30,12 +34,12 @@ function Note({note, deleteNote, updateNote}) {
         }}>
             <p>{note.note_text}</p>
             <CircleButton onClick={deleteNote} css={{
-                backgroundColor: "#c83f44",
+                backgroundColor: "#e1d2d2",
                 width: "10px",
                 height: "10px"
-            }}><FaRegTrashAlt/></CircleButton>
+            }}>{isDeleting ? <Spinner/> : <FaRegTrashAlt/>}</CircleButton>
             {!isEditMode && <CircleButton onClick={() => setIsEditMode(true)} css={{
-                backgroundColor: "#427eca",
+                backgroundColor: "#adb9cc",
                 width: "10px",
                 height: "10px"
             }}><FaEdit/></CircleButton>}
@@ -43,9 +47,10 @@ function Note({note, deleteNote, updateNote}) {
             {
                 isEditMode && <div><Input type="text" ref={noteRef} defaultValue={note.note_text}/>
                     <div css={{display: "flex", gap: "4px", justifyContent: "flex-end", marginTop: "5px"}}>
-                        <CircleButton onClick={updateNoteHandler} css={{backgroundColor: "#a3b3a3"}}><FaRegSave/>save</CircleButton>
+                        <CircleButton onClick={updateNoteHandler} css={{backgroundColor: "#8ea4bc"}}>{isUpdating ?
+                            <Spinner/> : <FaRegSave/>}</CircleButton>
                         <CircleButton onClick={() => setIsEditMode(false)}
-                                      css={{backgroundColor: "#9ba4bc"}}><GiCancel/>cancel</CircleButton>
+                                      css={{backgroundColor: "#d0dbec"}}><GiCancel/></CircleButton>
                     </div>
                 </div>
             }

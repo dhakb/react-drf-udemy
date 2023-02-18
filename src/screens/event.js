@@ -2,14 +2,13 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-
 import {useNavigate, useParams} from "react-router";
 import {useEventDelete, useEventFetch, useEventUpdate} from "../queries/event";
 import {CircleButton, FullPageSpinner} from "../components/lib";
 import EventForm from "../components/event-form";
 import Confirmation from "../components/confirmation";
 import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
-import {Modal, ModalContents, ModalOpenButton} from "../components/modal";
+import {ModalProvider, ModalContents, ModalOpenButton} from "../components/modal";
 import "@reach/dialog/styles.css";
 
 
@@ -39,10 +38,10 @@ function EventScreen() {
             by_invitation: invitation.checked,
             age_regulation: ageRegulation.checked
         }
-
         updateEvent.mutate({...data})
     }
 
+    if (updateEvent.isLoading) return <FullPageSpinner/>
     if (isEventLoading) return <FullPageSpinner/>
 
     return (
@@ -67,7 +66,7 @@ function EventScreen() {
                             display: "flex",
                             gap: "10px"
                         }}>
-                            <Modal>
+                            <ModalProvider>
                                 <ModalOpenButton>
                                     <CircleButton css={{
                                         display: "flex",
@@ -80,24 +79,27 @@ function EventScreen() {
                                 <ModalContents title="Are you sure?" offCancel={true} aria-label="event form">
                                     <Confirmation deleteHandler={eventDeleteHandler}/>
                                 </ModalContents>
-                            </Modal>
+                            </ModalProvider>
+
+                            <ModalProvider>
+                                <ModalOpenButton>
+                                    <CircleButton css={{
+                                        display: "flex",
+                                        gap: "5px",
+                                        backgroundColor: "#adb9cc",
+                                        width: "100px",
+                                    }}><FaEdit/>Edit</CircleButton>
+                                </ModalOpenButton>
+                                {
+                                    <ModalContents title="Edit Event" offCancel={true} aria-label="event form">
+                                        <EventForm onSubmit={eventUpdateHandler} isLoading={updateEvent.isLoading}
+                                                   event={event}/>
+                                    </ModalContents>
+                                }
+                            </ModalProvider>
                         </div>
                     )
                 }
-
-                <Modal>
-                    <ModalOpenButton>
-                        <CircleButton css={{
-                            display: "flex",
-                            gap: "5px",
-                            backgroundColor: "#adb9cc",
-                            width: "100px",
-                        }}><FaEdit/>Edit</CircleButton>
-                    </ModalOpenButton>
-                    <ModalContents title="Edit Event" offCancel={true} aria-label="event form">
-                        <EventForm onSubmit={eventUpdateHandler} isLoading={updateEvent.isLoading} event={event}/>
-                    </ModalContents>
-                </Modal>
             </div>
         </div>
     );

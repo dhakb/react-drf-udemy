@@ -5,10 +5,10 @@ import {jsx} from '@emotion/core'
 import * as React from 'react';
 import {useNavigate, useParams} from "react-router";
 
-import {Button, FullPageSpinner} from "../components/lib";
+import {Button, FullPageSpinner, Spinner} from "../components/lib";
 import Note from "../components/note";
 import EventForm from "../components/event-form";
-import {Modal, ModalContents, ModalOpenButton} from "../components/modal";
+import {ModalProvider, ModalContents, ModalOpenButton} from "../components/modal";
 import {StatusButton} from "../components/status-buttons";
 import {FaCheckCircle} from "react-icons/fa";
 import {BiMessageAdd} from "react-icons/bi"
@@ -37,14 +37,12 @@ function BookScreen() {
             alert("not possible to create note without note")
             return;
         }
-
-        if (createNote.isLoading) return <div>Loading....</div>
         createNote.mutate({note: noteRef.current.value})
     }
 
+    console.log(book?.event_id)
 
     const updateNoteHandler = (note) => {
-        if (updateNote.isLoading) return <div>Loading...</div>
         updateNote.mutate({note})
     }
 
@@ -67,7 +65,6 @@ function BookScreen() {
         }
 
         createEvent.mutate({...data})
-
     }
 
 
@@ -110,18 +107,15 @@ function BookScreen() {
             <div css={{
                 display: "flex",
                 gap: "10px",
-                button: {
-                    height: "30px"
-                }
             }}>
                 <h4>Note:</h4>
                 {
                     book?.note ? <Note note={book.note}
                                        deleteNote={deleteNoteHandler}
-                                       updateNote={updateNoteHandler}/> :
+                                       updateNote={updateNoteHandler} isUpdating={updateNote.isLoading} isDeleting={deleteNote.isLoading}/> :
                         <div>
                             <input type="text" ref={noteRef}/>
-                            <button onClick={createNoteHandler}>create note</button>
+                            <Button onClick={createNoteHandler} variant="success">{createNote.isLoading ? <Spinner/> : "create note"}</Button>
                         </div>
                 }
             </div>
@@ -132,15 +126,14 @@ function BookScreen() {
                         open event
                     </Button>
                 ) : (
-
-                    <Modal>
+                    <ModalProvider>
                         <ModalOpenButton>
                             <Button variant="success">Add event</Button>
                         </ModalOpenButton>
                         <ModalContents title="Add Event" offCancel={true} aria-label="event form">
                             <EventForm onSubmit={onEventSubmit} isLoading={createEvent.isLoading} />
                         </ModalContents>
-                    </Modal>
+                    </ModalProvider>
                 )
             }
             <div

@@ -5,7 +5,7 @@ import {jsx} from '@emotion/core'
 import * as React from "react"
 import {useNavigate, useParams} from "react-router-dom";
 import {useAuthor} from "../queries/author";
-import {FullPageSpinner, Button} from "../components/lib";
+import {FullPageSpinner, Button, Spinner,} from "../components/lib";
 import * as colors from "../styles/colors";
 import {StatusButton} from "../components/status-buttons";
 import {FaCheckCircle} from "react-icons/fa";
@@ -80,18 +80,14 @@ function AuthorScreen() {
             <div css={{
                 display: "flex",
                 gap: "10px",
-                button: {
-                    height: "30px"
-                }
             }}>
-                <h4>Note:</h4>
-                {
+                <h4>Note:</h4>                {
                     author?.note ? <Note note={author.note}
                                        deleteNote={deleteNoteHandler}
-                                       updateNote={updateNoteHandler}/> :
+                                       updateNote={updateNoteHandler} isUpdating={updateNote.isLoading} isDeleting={deleteNote.isLoading}/> :
                         <div>
                             <input type="text" ref={noteRef}/>
-                            <button onClick={createNoteHandler}>create note</button>
+                            <Button onClick={createNoteHandler} variant="success" id="createNoteBtn">{createNote.isLoading ? <Spinner/> : "create note"}</Button>
                         </div>
                 }
             </div>
