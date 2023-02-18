@@ -19,6 +19,7 @@ function useAsync(initialState) {
         ...initialState
     })
 
+
     const [{status, data, error}, dispatch] = React.useReducer((a, b) => ({...a, ...b}), initialStateRef.current)
     const safeSetState = useSafeDispatch(dispatch)
 
@@ -26,12 +27,11 @@ function useAsync(initialState) {
     const setError = (error) => safeSetState({error, status: "rejected"})
     const reset = () => safeSetState(initialStateRef.current)
 
-    const run = (promise) => {
+    const run = React.useCallback((promise) => {
         if (!promise || !promise.then) {
-            throw new Error("Argument passed to useAsync().run() should be a promise!")
+            throw new Error("Argument passed to useAsync().run() must be a promise!")
         }
         safeSetState({status: "pending"})
-
         return promise.then((res) => {
             setData(res.data)
             return res
@@ -39,7 +39,7 @@ function useAsync(initialState) {
             setError(error)
             return Promise.reject(error)
         })
-    }
+    }, [safeSetState])
 
 
     return {

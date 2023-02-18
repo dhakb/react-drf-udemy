@@ -28,27 +28,19 @@ function AuthProvider(props) {
             setData(res.data)
             navigate("/books")
             localStorage.setItem("__user_auth_token__", res?.data.access)
-            return res.data
-        }).catch((error) => {
-            console.log(error)
-            setError(error)
+            return res
         })
 
 
     const register = (form) => auth.register(form)
         .then((res) => {
-            console.log("register success!!!!")
             const {username, password} = form
             if (res.statusText === "OK") {
                 login({username, password}).catch(setError)
             }
-            console.log("register req res", res)
             return res
         })
-        .catch((error) => {
-            console.log("error in register", error)
-            setError(error)
-        })
+
 
 
     const logout = () => {
@@ -70,9 +62,9 @@ function AuthProvider(props) {
     //     return <FullPageSpinner/>
     // }
 
-    if (isError) {
-        return <FullPageErrorFallback error={error}/>
-    }
+    // if (isError) {
+    //     return <FullPageErrorFallback error={error}/>
+    // }
 
     // if (isSuccess) {
     return <AuthContext.Provider value={value} {...props}/>
@@ -84,7 +76,7 @@ function AuthProvider(props) {
 function useAuthContext() {
     const context = React.useContext(AuthContext)
     if (context === undefined) {
-        throw new Error(`useAuth must be used within a AuthProvider`)
+        throw new Error(`useAuthContext hook must be used within a AuthProvider Component`)
     }
     return context
 }
