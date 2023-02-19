@@ -160,7 +160,7 @@ const RegisterForm = ({onSubmit, submitButton}) => {
             <div>
                 {
                     React.cloneElement(submitButton, {type: "submit"}, ...(Array.isArray(submitButton.props.children) ? submitButton.props.children : [submitButton.props.children]), isLoading &&
-                        <Spinner css={{marginLeft: 5}}/>)
+                        <Spinner css={{marginLeft: 5, height: "12px"}}/>)
                 }
             </div>
         </form>
