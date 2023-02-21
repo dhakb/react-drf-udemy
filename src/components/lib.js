@@ -28,6 +28,7 @@ const inputStyles = {
     padding: '8px 12px',
 }
 const Input = styled.input({borderRadius: '3px'}, inputStyles)
+const TextArea = styled.textarea()
 
 
 const buttonVariants = {
@@ -97,10 +98,11 @@ const Dialog = styled(ReachDialog)({
     },
 })
 
-function FullPageSpinner() {
+function FullPageSpinner({styles}) {
     return (
         <div
             css={{
+                ...(styles && {...styles}),
                 fontSize: '4em',
                 height: '100vh',
                 display: 'flex',
@@ -186,4 +188,5 @@ export {
     ErrorMessage,
     Link,
     BookListUL,
+    TextArea
 }

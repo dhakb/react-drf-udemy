@@ -6,13 +6,13 @@ function useBook(bookId) {
     const fetchBook = useApiClient()
     return useQuery({
         queryKey: ['book', {bookId}],
-        queryFn: () => fetchBook(`book/${bookId}`, {method: "GET"}).then(res => res.data)
+        queryFn: () => fetchBook(`book/${bookId}/`, {method: "GET"}).then(res => res.data)
     })
 }
 
 
 function useBooks(selectedTags, pageNum) {
-    let endpoint = selectedTags.length ? `book/?tags=${selectedTags.reduce((acc, curr) => [...acc, curr.value], []).join()}` : "book/"
+    let endpoint = selectedTags.length ? `book/?tags=${selectedTags.reduce((acc, curr) => [...acc, curr.value], []).join()}/` : "book/"
     const fetchBooks = useApiClient()
     return useQuery({
         // queryKey: ["books", {pageNum}],
@@ -27,7 +27,7 @@ function useTags() {
     const fetchTags = useApiClient()
     return useQuery({
         queryKey: "tags",
-        queryFn: () => fetchTags('book/tag', {method: "GET"}).then(res => {
+        queryFn: () => fetchTags('book/tag/', {method: "GET"}).then(res => {
             return res.data.map(tag => ({label: tag.name, value: tag.id}))
         })
     })
