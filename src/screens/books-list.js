@@ -3,14 +3,12 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
-import {useBooks, useBooksNextPage, useBooksPrevPage, useTags} from "../queries/book";
-import {usePageNumber} from "../utils/hooks/hooks";
-import {BookListUL, FullPageSpinner} from "../components/lib";
-
-import Pagination from "../components/pagination";
+import {useBooks, useTags} from "../queries/book";
+import {BookListUL, FullPageSpinner, Spinner} from "../components/lib";
+import {usePageNumber, useScrollFetch} from "../utils/hooks/hooks";
+import {useApiClient} from "../utils/hooks/useApiClient";
 import BookItem from "../components/book-item";
 import Select from "react-select";
-
 
 
 function BooksListScreen() {
@@ -21,10 +19,32 @@ function BooksListScreen() {
 
     //React-Query /custom hooks
     const {isLoading, data: books, refetch: refetchBooksList} = useBooks(selectedTags, pageNum)
-    const {refetch: fetchNextPage} = useBooksNextPage(nextPage, pageNum)
-    const {refetch: fetchPreviousPage} = useBooksPrevPage(prevPage, pageNum)
     const {data: tags} = useTags()
 
+
+    //
+    const [booksList, setBooksList] = React.useState(books?.results)
+    const [isScrollFetching, setIsScrollFetching] = useScrollFetch(fetchNextPage)
+    const fetchPageNext = useApiClient()
+
+
+    function fetchNextPage() {
+        nextPage && fetchPageNext(nextPage, {method: "GET", pagination: true}).then(res => {
+            setBooksList((prev) => [...prev, ...res.data.results])
+            setNextPage(res.data.next)
+            setIsScrollFetching(false)
+        })
+        if (!nextPage) {
+            setIsScrollFetching(false)
+        }
+    }
+
+
+    React.useEffect(() => {
+        setBooksList(books?.results)
+    }, [books])
+
+    //
 
 
     React.useEffect(() => {
@@ -39,7 +59,7 @@ function BooksListScreen() {
 
 
     if (isLoading) {
-        return <FullPageSpinner  styles={{position: ""}}/>
+        return <FullPageSpinner styles={{position: ""}}/>
     }
 
     return (
@@ -55,17 +75,17 @@ function BooksListScreen() {
 
                 <BookListUL>
                     {
-                        books.results.map((book) => (
-                            <li key={book.id} >
+                        booksList?.map((book) => (
+                            <li key={book.id}>
                                 <BookItem book={book}/>
                             </li>
                         ))
                     }
+                    {
+                        isScrollFetching && <Spinner/>
+                    }
                 </BookListUL>
             </div>
-
-            <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPreviousPage} nextPage={nextPage}
-                        prevPage={prevPage} />
         </div>
     );
 }

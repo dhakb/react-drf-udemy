@@ -1,3 +1,7 @@
+import React from "react"
+
+
+
 export function usePageNumber(prevPage, nextPage) {
     if (prevPage === null && nextPage === null) {
         return 1
@@ -17,4 +21,30 @@ export function usePageNumber(prevPage, nextPage) {
         }
     }
     return 1
+}
+
+
+
+export function useScrollFetch(callback) {
+    const [isScrollFetching, setIsScrollFetching] = React.useState(false)
+
+    React.useEffect(() => {
+        window.addEventListener("scroll", handleScroll)
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, [])
+
+    React.useEffect(() => {
+        if(isScrollFetching) {
+            callback()
+        }
+    }, [isScrollFetching, callback])
+
+    const handleScroll = () => {
+        if(window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) {
+            return;
+        }
+        setIsScrollFetching(true)
+    }
+
+    return [isScrollFetching, setIsScrollFetching]
 }
