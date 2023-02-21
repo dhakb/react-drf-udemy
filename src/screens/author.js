@@ -2,39 +2,45 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-import * as React from "react"
-import {useNavigate, useParams} from "react-router-dom";
+
+import {Link, useParams} from "react-router-dom";
 import {useAuthor} from "../queries/author";
-import {FullPageSpinner, Button, Spinner,} from "../components/lib";
+import {FullPageSpinner, Spinner, TextArea} from "../components/lib";
 import * as colors from "../styles/colors";
 import {StatusButton} from "../components/status-buttons";
 import {FaCheckCircle} from "react-icons/fa";
-import {BiMessageAdd} from "react-icons/bi";
-import Note from "../components/note";
 import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
 
-
 function AuthorScreen() {
-    const noteRef = React.useRef()
     const {authorId} = useParams()
-    const navigate = useNavigate()
     const {isLoading, data: author} = useAuthor(authorId)
     const createNote = useNoteCreate({endpoint: `author/${authorId}`, queryKey: ["author", {authorId}]})
     const updateNote = useNoteUpdate({noteId: author?.note?.id, queryKey: ["author", {authorId}]})
     const deleteNote = useNoteDelete({noteId: author?.note?.id, queryKey: ["author", {authorId}]})
 
-    const deleteNoteHandler = () => {
-        deleteNote.mutate()
+
+    const debounce = (callback, timeout = 1000) => {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback.apply(this, args)
+            }, timeout)
+        }
     }
 
-    const updateNoteHandler = (note) => {
-        if (updateNote.isLoading) return <div>Loading...</div>
-        updateNote.mutate({note})
+
+    const noteChangeHandler = (e) => {
+        if (!author?.note?.id) {
+            createNote.mutate({note: e.target.value})
+        } else if (e.target.value.length < 1) {
+            deleteNote.mutate()
+        } else {
+            updateNote.mutate({note: e.target.value})
+        }
     }
 
-    const createNoteHandler = () => {
-        createNote.mutate({note: noteRef.current.value})
-    }
+    const debouncedNoteHandler = debounce(noteChangeHandler)
 
 
     if (isLoading) {
@@ -55,48 +61,25 @@ function AuthorScreen() {
             h1: {
                 fontSize: "40px"
             },
-            h3: {
+            "div: nth-of-type(1)": {
                 fontStyle: "italic",
-                fontSize: "22px"
+                marginBottom: "3px"
             },
-            "div > div": {
-                fontStyle: "italic"
-            },
-            "div: nth-of-type(2)": {
-                fontSize: "15px",
-                p: {
-                    margin: 0,
-                },
-                Button: {
-                    marginTop: "3px"
-                }
-            }
         }}>
-            <div>
-                <h1>{author.first_name}, {author.last_name}</h1>
-                <div>Birth date: {new Date(author.date_of_birth).toDateString().slice(4)}</div>
-            </div>
 
-            <div css={{
-                display: "flex",
-                gap: "10px",
-            }}>
-                <h4>Note:</h4>                {
-                    author?.note ? <Note note={author.note}
-                                       deleteNote={deleteNoteHandler}
-                                       updateNote={updateNoteHandler} isUpdating={updateNote.isLoading} isDeleting={deleteNote.isLoading}/> :
-                        <div>
-                            <input type="text" ref={noteRef}/>
-                            <Button onClick={createNoteHandler} variant="success" id="createNoteBtn">{createNote.isLoading ? <Spinner/> : "create note"}</Button>
-                        </div>
+            <h1>{author.first_name}, {author.last_name}</h1>
+            <div>Birth date: {new Date(author.date_of_birth).toDateString().slice(4)}</div>
+            <div>Total books: {author.total_books}</div>
+            <Link to={"./books"} style={{margin: "0", padding: "0" , width: "90px"}}>show books</Link>
+
+
+            <div css={{display: "flex", alignItems: "center", gap: "6px", marginTop: "30px"}}>
+                <h4>note</h4>
+                {
+                    updateNote.isLoading && <Spinner css={{marginBottom: "5px"}}/>
                 }
             </div>
-
-
-            <div>
-                <p>Total books: {author.total_books}</p>
-                <Button onClick={() => navigate("./books")}>List author's books</Button>
-            </div>
+            <TextArea onChange={debouncedNoteHandler} defaultValue={author?.note?.note_text} cols="40" rows="10" />
             <div
                 css={{
                     position: 'absolute',
@@ -109,9 +92,8 @@ function AuthorScreen() {
                 }}
             >
                 {
-                    author.note ?
-                        <StatusButton icon={<FaCheckCircle css={{width: "25px", height: "25px"}}/>} size={"45px"}/> :
-                        <StatusButton icon={<BiMessageAdd css={{width: "20px", height: "20px", color: "gray"}}/>} size={"40px"} label="add note"/>
+                    author.note &&
+                    <StatusButton icon={<FaCheckCircle css={{width: "25px", height: "25px"}}/>} size={"45px"}/>
                 }
             </div>
         </div>
