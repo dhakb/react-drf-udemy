@@ -1,4 +1,4 @@
-function usePageNumber(prevPage, nextPage) {
+export function usePageNumber(prevPage, nextPage) {
     if (prevPage === null && nextPage === null) {
         return 1
     } else if (prevPage === null && nextPage) {
@@ -18,5 +18,3 @@ function usePageNumber(prevPage, nextPage) {
     }
     return 1
 }
-
-export {usePageNumber}

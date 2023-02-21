@@ -4,12 +4,13 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react';
 import {useBooks, useBooksNextPage, useBooksPrevPage, useTags} from "../queries/book";
-import {usePageNumber} from "../utils/usePageNumber";
-import {BookListUL} from "../components/lib";
+import {usePageNumber} from "../utils/hooks/hooks";
+import {BookListUL, FullPageSpinner} from "../components/lib";
 
 import Pagination from "../components/pagination";
 import BookItem from "../components/book-item";
 import Select from "react-select";
+
 
 
 function BooksListScreen() {
@@ -38,7 +39,7 @@ function BooksListScreen() {
 
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <FullPageSpinner  styles={{position: ""}}/>
     }
 
     return (
@@ -64,7 +65,7 @@ function BooksListScreen() {
             </div>
 
             <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPreviousPage} nextPage={nextPage}
-                        prevPage={prevPage} fetchPage={() => {}}/>
+                        prevPage={prevPage} />
         </div>
     );
 }

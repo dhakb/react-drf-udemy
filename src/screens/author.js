@@ -2,32 +2,26 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-
 import {Link, useParams} from "react-router-dom";
-import {useAuthor} from "../queries/author";
+
+import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
 import {FullPageSpinner, Spinner, TextArea} from "../components/lib";
-import * as colors from "../styles/colors";
 import {StatusButton} from "../components/status-buttons";
 import {FaCheckCircle} from "react-icons/fa";
-import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
+import {useAuthor} from "../queries/author";
+import {debounce} from "../utils/utils"
+import * as colors from "../styles/colors";
+
+
 
 function AuthorScreen() {
     const {authorId} = useParams()
     const {isLoading, data: author} = useAuthor(authorId)
-    const createNote = useNoteCreate({endpoint: `author/${authorId}`, queryKey: ["author", {authorId}]})
+
+    //React-Query /custom hooks
     const updateNote = useNoteUpdate({noteId: author?.note?.id, queryKey: ["author", {authorId}]})
     const deleteNote = useNoteDelete({noteId: author?.note?.id, queryKey: ["author", {authorId}]})
-
-
-    const debounce = (callback, timeout = 1000) => {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer)
-            timer = setTimeout(() => {
-                callback.apply(this, args)
-            }, timeout)
-        }
-    }
+    const createNote = useNoteCreate({endpoint: `author/${authorId}`, queryKey: ["author", {authorId}]})
 
 
     const noteChangeHandler = (e) => {
@@ -40,12 +34,8 @@ function AuthorScreen() {
         }
     }
 
-    const debouncedNoteHandler = debounce(noteChangeHandler)
 
-
-    if (isLoading) {
-        return <FullPageSpinner/>
-    }
+    if (isLoading) return <FullPageSpinner/>
 
     return (
         <div css={{
@@ -79,7 +69,7 @@ function AuthorScreen() {
                     updateNote.isLoading && <Spinner css={{marginBottom: "5px"}}/>
                 }
             </div>
-            <TextArea onChange={debouncedNoteHandler} defaultValue={author?.note?.note_text} cols="40" rows="10" />
+            <TextArea onChange={debounce(noteChangeHandler)} defaultValue={author?.note?.note_text} cols="40" rows="10" />
             <div
                 css={{
                     position: 'absolute',

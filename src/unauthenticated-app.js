@@ -3,12 +3,12 @@
 import {jsx} from '@emotion/core'
 
 import * as React from "react"
-import {Button, FormGroup, Input, Spinner} from "./components/lib";
 import {ModalContents, ModalOpenButton, ModalProvider} from "./components/modal";
-import {setNotification} from "./utils/setNotification";
+import {Button, FormGroup, Input, Spinner} from "./components/lib";
 import {useAuthContext} from "./context/auth-context";
+import {setNotification} from "./utils/utils";
 import {useForm} from "react-hook-form";
-import {useAsync} from "./utils/useAsync";
+import {useAsync} from "./utils/hooks/useAsync";
 import Logo from "./components/logo"
 import "@reach/dialog/styles.css";
 
@@ -66,6 +66,7 @@ const LoginForm = ({onSubmit, submitButton}) => {
         </form>
     )
 }
+
 
 const RegisterForm = ({onSubmit, submitButton}) => {
     const {isLoading, isError, error, run} = useAsync()

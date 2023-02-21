@@ -3,9 +3,9 @@
 import {jsx} from '@emotion/core'
 
 import * as React from "react"
-import * as auth from "../utils/auth-provider"
-import {useAsync} from "../utils/useAsync";
-import {FullPageErrorFallback} from "../components/lib";
+import * as auth from "../utils/authProvider"
+import {useAsync} from "../utils/hooks/useAsync";
+import {FullPageErrorFallback, FullPageSpinner} from "../components/lib";
 import {useNavigate} from "react-router-dom";
 
 const AuthContext = React.createContext()
@@ -58,9 +58,9 @@ function AuthProvider(props) {
         logout
     }
 
-    // if (isLoading || isIdle) {
-    //     return <FullPageSpinner/>
-    // }
+    if (isLoading) {
+        return <FullPageSpinner/>
+    }
 
     // if (isError) {
     //     return <FullPageErrorFallback error={error}/>

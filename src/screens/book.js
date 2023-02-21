@@ -2,22 +2,21 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
-import * as React from 'react';
 import {useNavigate, useParams} from "react-router";
 
-import {Button, FullPageSpinner, Spinner, TextArea} from "../components/lib";
-import EventForm from "../components/event-form";
 import {ModalContents, ModalOpenButton, ModalProvider} from "../components/modal";
+import {Button, FullPageSpinner, Spinner, TextArea} from "../components/lib";
 import {StatusButton} from "../components/status-buttons";
+import EventForm from "../components/event-form";
 import {FaCheckCircle} from "react-icons/fa";
-import {BiMessageAdd} from "react-icons/bi"
 
-import {useBook} from "../queries/book";
 import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
 import {useEventCreate} from "../queries/event";
+import {debounce} from "../utils/utils"
 import * as colors from "../styles/colors";
+import {useBook} from "../queries/book";
 import "@reach/dialog/styles.css";
-import note from "../components/note";
+
 
 
 function BookScreen() {
@@ -48,14 +47,6 @@ function BookScreen() {
     }
 
 
-    function debounce (callback, timeout = 1000) {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer)
-            timer = setTimeout(() => {callback.apply(this, args)}, timeout)
-        }
-    }
-
     const noteChangeHandler = (e) => {
         if (!book?.note?.id) {
             createNote.mutate({note: e.target.value})
@@ -66,12 +57,9 @@ function BookScreen() {
         }
     }
 
-    const debouncedNoteHandler = debounce(noteChangeHandler)
 
+    if (isLoading) return <FullPageSpinner/>
 
-    if (isLoading) {
-        return <FullPageSpinner/>
-    }
 
     return (
         <div css={{
@@ -104,11 +92,11 @@ function BookScreen() {
             <p><b>Language:</b> {book?.language}</p>
             <p><b>Publication date:</b> {book?.published_at}</p>
 
-            <div css={{display: "flex", alignItems: "center", gap: "10px"}}>
+            <div css={{display: "flex", alignItems: "center", gap: "6px"}}>
                 <h4>note</h4>
                 {updateNote.isLoading && <Spinner css={{marginBottom: "7px"}}/>}
             </div>
-            <TextArea css={{resize: "none"}} rows="10" cols="40" onChange={debouncedNoteHandler} defaultValue={book?.note?.note_text}/>
+            <TextArea css={{resize: "none"}} rows="10" cols="40" onChange={debounce(noteChangeHandler)} defaultValue={book?.note?.note_text}/>
             {
                 book?.event_id ? (
                     <Button onClick={() => navigate(`../event/${book.event_id}`)}>
@@ -139,8 +127,6 @@ function BookScreen() {
                 {
                     book?.note &&
                         <StatusButton icon={<FaCheckCircle css={{width: "25px", height: "25px"}}/>} size={"45px"}/>
-                        // <StatusButton icon={<BiMessageAdd css={{width: "20px", height: "20px", color: "gray"}}/>}
-                        //               size={"40px"} label="add note"/>
                 }
             </div>
         </div>

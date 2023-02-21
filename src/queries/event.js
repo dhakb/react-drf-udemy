@@ -1,4 +1,4 @@
-import {useApiClient} from "../utils/useApiClient";
+import {useApiClient} from "../utils/hooks/useApiClient";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 
 function useEventCreate(bookId) {

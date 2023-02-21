@@ -19,6 +19,7 @@ import {EventScreen} from "./screens/event";
 import {AuthorScreen} from "./screens/author"
 
 
+
 function AuthenticatedApp() {
     const {logout} = useAuthContext()
 

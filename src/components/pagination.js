@@ -4,7 +4,7 @@ import {jsx} from '@emotion/core'
 
 
 import {Button} from "./lib";
-import {usePageNumber} from "../utils/usePageNumber";
+import {usePageNumber} from "../utils/hooks/hooks";
 
 
 function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {

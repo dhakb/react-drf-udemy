@@ -8,6 +8,7 @@ import {useAuthorsList, useAuthorsNextPage, useAuthorsPrevPage} from "../queries
 
 import Pagination from "../components/pagination";
 import AuthorItem from "../components/author-item";
+import {FullPageSpinner} from "../components/lib";
 
 
 function AuthorsListScreen() {
@@ -25,11 +26,9 @@ function AuthorsListScreen() {
         setPrevPage(authors?.previous)
     }, [authors])
 
-
-    if (isLoading) {
-        return <div>Loading...</div>
+    if(isLoading) {
+       return  <FullPageSpinner/>
     }
-
 
     return (
         <div>

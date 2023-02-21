@@ -1,5 +1,5 @@
 import {useQuery} from "react-query"
-import {useApiClient} from "../utils/useApiClient";
+import {useApiClient} from "../utils/hooks/useApiClient";
 
 
 function useBook(bookId) {
