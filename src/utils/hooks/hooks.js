@@ -2,17 +2,13 @@ import React from "react"
 
 
 export function usePageNumber(prevPage, nextPage) {
-    if (prevPage === null && nextPage === null) {
-        return 1
-    } else if (prevPage === null && nextPage) {
-        return 1
-    } else if(prevPage && nextPage) {
+    if (prevPage && nextPage) {
         const pageRef = nextPage.match(/page=([^&]+)/g)
         const pageNum = pageRef[0].slice(pageRef[0].indexOf("=") + 1)
         return parseInt(pageNum) - 1
-    } else if(prevPage && nextPage === null) {
+    } else if (prevPage && nextPage === null) {
         const pageRef = prevPage.match(/page=([^&]+)/g)
-        if(pageRef) {
+        if (pageRef) {
             const pageNum = pageRef[0].slice(pageRef[0].indexOf("=") + 1)
             return parseInt(pageNum) + 1
         } else {
@@ -21,7 +17,6 @@ export function usePageNumber(prevPage, nextPage) {
     }
     return 1
 }
-
 
 
 export function useScrollFetch({hasNextPage, fetchNextPage}) {
@@ -33,13 +28,13 @@ export function useScrollFetch({hasNextPage, fetchNextPage}) {
     }, [])
 
     React.useEffect(() => {
-        if(isScrollFetching && hasNextPage) {
+        if (isScrollFetching && hasNextPage) {
             fetchNextPage()
         }
     }, [isScrollFetching, fetchNextPage, hasNextPage])
 
     function handleScroll() {
-        if(window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) {
+        if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) {
             return;
         }
         setIsScrollFetching(true)
