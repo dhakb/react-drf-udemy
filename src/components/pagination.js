@@ -12,15 +12,6 @@ function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {
     const pageNumber = usePageNumber(prevPage, nextPage)
 
 
-    // const nextPageHandler = () => {
-    //     fetchNextPage().catch(console.log)
-    // };
-    //
-    // const prevPageHandler = () => {
-    //     fetchPrevPage().catch(console.log)
-    // };
-
-
     return (
         <div css={{
             display: "flex",

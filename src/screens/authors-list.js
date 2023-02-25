@@ -3,28 +3,34 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
-
-import {useAuthorsList, useAuthorsNextPage, useAuthorsPrevPage} from "../queries/author";
+import {useAuthorsList} from "../queries/author";
+import {FullPageSpinner} from "../components/lib";
 
 import Pagination from "../components/pagination";
 import AuthorItem from "../components/author-item";
-import {FullPageSpinner} from "../components/lib";
+
 
 
 function AuthorsListScreen() {
+    const [requestPath, setRequestPath] = React.useState("author/")
     const [prevPage, setPrevPage] = React.useState(null)
     const [nextPage, setNextPage] = React.useState(null)
-
-    //React-Query /custom hooks
-    const {isLoading, data: authors} = useAuthorsList()
-    const {refetch: fetchPrevPage} = useAuthorsPrevPage({prevPage, queryKey: "authors"})
-    const {refetch: fetchNextPage} = useAuthorsNextPage({nextPage, queryKey: "authors"})
-
+    const  {data: authors, isLoading} = useAuthorsList({requestPath})
 
     React.useEffect(() => {
         setNextPage(authors?.next)
         setPrevPage(authors?.previous)
     }, [authors])
+
+
+    const fetchNextPage = () => {
+        setRequestPath(authors.next)
+    }
+
+    const fetchPrevPage = () => {
+        setRequestPath(authors.previous)
+    }
+
 
     if(isLoading) {
        return  <FullPageSpinner/>
@@ -40,7 +46,7 @@ function AuthorsListScreen() {
                 gridGap: '1em',
             }}>
                 {
-                    authors.results.map((author) => (
+                    authors?.results?.map((author) => (
                         <li key={author.id}>
                             <AuthorItem author={author}/>
                         </li>

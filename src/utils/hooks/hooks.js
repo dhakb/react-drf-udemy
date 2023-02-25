@@ -1,7 +1,6 @@
 import React from "react"
 
 
-
 export function usePageNumber(prevPage, nextPage) {
     if (prevPage === null && nextPage === null) {
         return 1
@@ -25,7 +24,7 @@ export function usePageNumber(prevPage, nextPage) {
 
 
 
-export function useScrollFetch(callback) {
+export function useScrollFetch({hasNextPage, fetchNextPage}) {
     const [isScrollFetching, setIsScrollFetching] = React.useState(false)
 
     React.useEffect(() => {
@@ -34,17 +33,17 @@ export function useScrollFetch(callback) {
     }, [])
 
     React.useEffect(() => {
-        if(isScrollFetching) {
-            callback()
+        if(isScrollFetching && hasNextPage) {
+            fetchNextPage()
         }
-    }, [isScrollFetching, callback])
+    }, [isScrollFetching, fetchNextPage, hasNextPage])
 
-    const handleScroll = () => {
+    function handleScroll() {
         if(window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) {
             return;
         }
         setIsScrollFetching(true)
     }
 
-    return [isScrollFetching, setIsScrollFetching]
+    return [setIsScrollFetching]
 }
