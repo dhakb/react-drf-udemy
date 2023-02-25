@@ -13,8 +13,7 @@ function useNoteCreate({endpoint, queryKey}) {
 function useNoteUpdate({noteId, queryKey}) {
     const queryClient = useQueryClient()
     const editNote = useApiClient()
-    return useMutation((data) => editNote(`note/${noteId}/`, {method: "PUT", body: data})
-    , {
+    return useMutation((data) => editNote(`note/${noteId}/`, {method: "PUT", body: data}), {
         onSuccess: (res) => queryClient.setQueriesData(queryKey, (oldData) => ({...oldData, note: {...oldData.note, note_text: res.data.note}}))
     })
 }

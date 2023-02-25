@@ -5,7 +5,7 @@ function useEventCreate(bookId) {
     const queryClient = useQueryClient()
     const createEvent = useApiClient()
     return useMutation((data) => createEvent(`event/`, {method: "POST", body: data}), {
-        onSuccess: () => queryClient.invalidateQueries(["book", {bookId}]),
+        onSuccess: (res) => queryClient.setQueriesData(["book", {bookId}], (oldData) => ({...oldData, event_id: res.data.id})),
     })
 }
 
@@ -13,10 +13,7 @@ function useEventFetch(eventId) {
     const fetchEvent = useApiClient()
     return useQuery({
         queryKey: ["event", {eventId}],
-        queryFn: () => {
-            console.log("async trigger")
-            return fetchEvent(`event/${eventId}`, {method: "GET"}).then(res => res.data)
-        }
+        queryFn: () => fetchEvent(`event/${eventId}/`, {method: "GET"}).then(res => res.data)
     })
 }
 
@@ -24,7 +21,7 @@ function useEventUpdate(eventId) {
     const queryClient = useQueryClient()
     const updateEvent = useApiClient()
     return useMutation((data) => updateEvent(`event/${eventId}/`, {method: "PATCH", body: data}), {
-        onSuccess: () => queryClient.invalidateQueries(["event", {eventId}])
+        onSuccess: (res) => queryClient.setQueriesData(["event", {eventId}], () => ({...res.data}))
     })
 }
 
@@ -32,7 +29,7 @@ function useEventDelete(eventId, bookId) {
     const queryClient = useQueryClient()
     const deleteEvent = useApiClient()
     return useMutation(() => deleteEvent(`event/${eventId}/`, {method: "DELETE"}), {
-        onSuccess: () => queryClient.invalidateQueries(['book', {bookId}])
+        onSuccess: () => queryClient.setQueriesData(['book', {bookId}], (oldData) => ({...oldData, event_id: null}))
     })
 }
 
