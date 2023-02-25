@@ -3,26 +3,25 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react';
-
 import {useParams} from "react-router-dom";
 import {FullPageSpinner} from "../components/lib";
-import {useAuthorBooks, useAuthorsNextPage, useAuthorsPrevPage} from "../queries/author";
+import {useAuthorBooks} from "../queries/author";
 import Pagination from "../components/pagination";
 import AuthorBookItem from "../components/authorbook-item";
 
 
 function AuthorBooksScreen() {
+    const {authorId} = useParams()
+    const [limit, setLimit] = React.useState("10")
+    const [requestPath, setRequestPath] = React.useState(`/author/${authorId}/books/?limit=${limit}`)
+    const {data: books, isLoading} = useAuthorBooks({requestPath, authorId})
     const [nextPage, setNextPage] = React.useState(null)
     const [prevPage, setPrevPage] = React.useState(null)
-    const [limit, setLimit] = React.useState("5")
-    const {authorId} = useParams()
 
-    //React-Query /custom hooks
-    const {isLoading, data: books, refetch: refetchAuthorBooks} = useAuthorBooks(authorId, limit)
-    const {refetch: fetchPrevPage} = useAuthorsPrevPage({prevPage, queryKey: ["authorBooks", {authorId}]})
-    const {refetch: fetchNextPage} = useAuthorsNextPage({nextPage, queryKey: ["authorBooks", {authorId}]})
-    // const {refetch: fetchPage} = useAuthorsPage({nextPage, queryKey: ["authorBooks", {authorId}]})
 
+    React.useEffect(() => {
+        setRequestPath(`/author/${authorId}/books/?limit=${limit}`)
+    }, [limit])
 
     React.useEffect(() => {
         setNextPage(books?.next)
@@ -30,9 +29,13 @@ function AuthorBooksScreen() {
     }, [books])
 
 
-    React.useEffect(() => {
-        refetchAuthorBooks().catch(console.log)
-    }, [limit])
+    const fetchNextPage = () => {
+        setRequestPath(books.next)
+    }
+
+    const fetchPrevPage = () => {
+        setRequestPath(books.previous)
+    }
 
 
     if(isLoading) {
@@ -41,7 +44,7 @@ function AuthorBooksScreen() {
 
     return (
         <div>
-            <h1>Boooks by</h1>
+            <h1>Books by</h1>
             <label htmlFor="limit" css={{marginRight: "8px"}}>Show per page</label>
             <select value={limit} onChange={(e) => setLimit(e.target.value)} css={{
                 width: "100px",

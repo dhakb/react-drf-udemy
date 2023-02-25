@@ -5,19 +5,20 @@ import {jsx} from '@emotion/core'
 
 import {Button} from "./lib";
 import {usePageNumber} from "../utils/hooks/hooks";
+import PropTypes from "prop-types";
 
 
 function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {
     const pageNumber = usePageNumber(prevPage, nextPage)
 
 
-    const nextPageHandler = () => {
-        fetchNextPage().catch(console.log)
-    };
-
-    const prevPageHandler = () => {
-        fetchPrevPage().catch(console.log)
-    };
+    // const nextPageHandler = () => {
+    //     fetchNextPage().catch(console.log)
+    // };
+    //
+    // const prevPageHandler = () => {
+    //     fetchPrevPage().catch(console.log)
+    // };
 
 
     return (
@@ -35,15 +36,23 @@ function Pagination({fetchNextPage, fetchPrevPage, nextPage, prevPage}) {
             }
         }}
         >
-            <Button onClick={prevPageHandler} id="pageBtn" disabled={!prevPage}>
+            <Button onClick={fetchPrevPage} id="pageBtn" disabled={!prevPage}>
                 Prev
             </Button>
             <p>{pageNumber}</p>
-            <Button onClick={nextPageHandler} id="pageBtn" disabled={!nextPage}>
+            <Button onClick={fetchNextPage} id="pageBtn" disabled={!nextPage}>
                 Next
             </Button>
         </div>
     );
 };
+
+
+Pagination.propTypes = {
+    fetchNextPage: PropTypes.func,
+    fetchPrevPage: PropTypes.func,
+    nextPage: PropTypes.string,
+    prevPage: PropTypes.string,
+}
 
 export default Pagination;

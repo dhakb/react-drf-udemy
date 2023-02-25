@@ -2,16 +2,17 @@ import {useQuery} from "react-query";
 import {useApiClient} from "../utils/hooks/useApiClient";
 
 
-
-function useAuthorsList()  {
+export function useAuthorsList({requestPath})  {
     const fetchAuthors = useApiClient()
+    const pagination = /http/g.test(requestPath)
     return useQuery({
-        queryKey: "authors",
-        queryFn: () => fetchAuthors('author', {method: "GET"}).then(res => res.data)
+        queryKey: ["authors", {requestPath}],
+        queryFn: () => fetchAuthors(`${requestPath}`, {method: "GET", pagination}).then(res => res.data),
+        keepPreviousData: true,
     })
 }
 
-function useAuthor(authorId) {
+export function useAuthor(authorId) {
     const fetchAuthor = useApiClient()
     return useQuery({
         queryKey: ["author", {authorId}],
@@ -19,37 +20,12 @@ function useAuthor(authorId) {
     })
 }
 
-function useAuthorBooks(authorId, limit = 5) {
+export function useAuthorBooks({requestPath, authorId}) {
     const fetchAuthorBooks = useApiClient()
+    const pagination = /http/g.test(requestPath)
     return useQuery({
-        queryKey: ["authorBooks", {authorId}],
-        queryFn: () => fetchAuthorBooks(`/author/${authorId}/books/?limit=${limit}`, {method: "GET"}).then(res => res.data)
+        queryKey: ["authorBooks", {authorId, requestPath}],
+        queryFn: () => fetchAuthorBooks(`${requestPath}`, {method: "GET", pagination}).then(res => res.data),
+        keepPreviousData: true
     })
 }
-
-function useAuthorsNextPage({nextPage, queryKey}) {
-    const fetchNextPage = useApiClient()
-    return useQuery({
-        queryKey: queryKey,
-        queryFn: () => fetchNextPage(nextPage, {method: "GET", pagination: true}).then((res) => res.data)
-    })
-}
-
-function useAuthorsPrevPage({prevPage, queryKey}) {
-    const fetchNextPage = useApiClient()
-    return useQuery({
-        queryKey: queryKey,
-        queryFn: () => fetchNextPage(prevPage, {method: "GET", pagination: true}).then((res) => res.data)
-    })
-}
-
-// function useAuthorsPage({page, queryKey}) {
-//     const fetchPage = useApiClient()
-//     return useQuery({
-//         queryKey: queryKey,
-//         queryFn: () => fetchPage(page, {method: "GET", pagination: true}).then((res) => res.data)
-//     })
-// }
-
-
-export {useAuthorsList,useAuthor, useAuthorsNextPage, useAuthorsPrevPage, useAuthorBooks}
