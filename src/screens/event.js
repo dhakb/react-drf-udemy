@@ -2,17 +2,21 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
+import React from "react"
 import {useNavigate, useParams} from "react-router";
 import {useEventDelete, useEventFetch, useEventUpdate} from "../queries/event";
 import {CircleButton, FullPageSpinner} from "../components/lib";
+import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
+import {ModalContents, ModalOpenButton, ModalProvider} from "../components/modal";
+import {setNotification} from "../utils/utils";
+// import {ModalContext} from "../components/modal";
 import EventForm from "../components/event-form";
 import Confirmation from "../components/confirmation";
-import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
-import {ModalProvider, ModalContents, ModalOpenButton} from "../components/modal";
 import "@reach/dialog/styles.css";
 
 
 function EventScreen() {
+    // const [isOpen, setIsOpen] = React.useContext(ModalContext)
     const navigate = useNavigate()
     const {eventId} = useParams()
 
@@ -28,18 +32,30 @@ function EventScreen() {
     }
 
 
-    const eventUpdateHandler = (e) => {
-        e.preventDefault()
-        const {title, date, city, invitation, ageRegulation} = e.target.elements
+    const eventUpdateHandler = ({title, date, city, invitation, ageRegulation}) => {
         const data = {
-            title: title.value,
-            event_date: date.value,
-            city: city.value,
-            by_invitation: invitation.checked,
-            age_regulation: ageRegulation.checked
+            title: title,
+            event_date: date,
+            city: city,
+            by_invitation: invitation,
+            age_regulation: ageRegulation
         }
         updateEvent.mutate({...data})
     }
+
+    React.useEffect(() => {
+        setNotification({data: updateEvent?.error?.response?.data})
+    }, [updateEvent.isError])
+
+    React.useEffect(() => {
+        setNotification({data: updateEvent.isSuccess && ["Event has been updated!"], success: true})
+    }, [updateEvent.isSuccess])
+
+
+    // React.useEffect(() => {
+    //     setIsOpen(false)
+    // }, [updateEvent.isSuccess])
+
 
     if (updateEvent.isLoading) return <FullPageSpinner/>
     if (isEventLoading) return <FullPageSpinner/>
@@ -90,12 +106,10 @@ function EventScreen() {
                                         width: "100px",
                                     }}><FaEdit/>Edit</CircleButton>
                                 </ModalOpenButton>
-                                {
-                                    <ModalContents title="Edit Event" offCancel={true} aria-label="event form">
-                                        <EventForm onSubmit={eventUpdateHandler} isLoading={updateEvent.isLoading}
-                                                   event={event}/>
-                                    </ModalContents>
-                                }
+                                <ModalContents title="Edit Event" offCancel={true} aria-label="event form">
+                                    <EventForm onSubmit={eventUpdateHandler} isLoading={updateEvent.isLoading}
+                                               event={event}/>
+                                </ModalContents>
                             </ModalProvider>
                         </div>
                     )

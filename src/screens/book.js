@@ -2,19 +2,18 @@
 /** @jsxRuntime classic */
 import {jsx} from '@emotion/core'
 
+import React from "react";
 import {useNavigate, useParams} from "react-router";
-
 import {ModalContents, ModalOpenButton, ModalProvider} from "../components/modal";
-import {Button, FullPageSpinner, Spinner, TextArea} from "../components/lib";
-import {StatusButton} from "../components/status-buttons";
-import EventForm from "../components/event-form";
-import {FaCheckCircle} from "react-icons/fa";
-
 import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
+import {Button, FullPageSpinner, Spinner, TextArea} from "../components/lib";
+import {debounce, setNotification} from "../utils/utils"
+import {StatusButton} from "../components/status-buttons";
 import {useEventCreate} from "../queries/event";
-import {debounce} from "../utils/utils"
-import * as colors from "../styles/colors";
+import {FaCheckCircle} from "react-icons/fa";
 import {useBook} from "../queries/book";
+import * as colors from "../styles/colors";
+import EventForm from "../components/event-form";
 import "@reach/dialog/styles.css";
 
 
@@ -31,20 +30,28 @@ function BookScreen() {
     const deleteNote = useNoteDelete({noteId: book?.note?.id, queryKey: ["book", {bookId}]})
 
 
-    const onEventSubmit = (e) => {
-        e.preventDefault()
-        const {title, date, city, invitation, ageRegulation} = e.target.elements
+    const onEventSubmit = ({title, date, city, invitation, ageRegulation}) => {
         const data = {
             book_id: book.id,
-            title: title.value,
-            event_date: date.value,
-            city: city.value,
-            by_invitation: invitation.checked,
-            age_regulation: ageRegulation.checked
+            title: title,
+            event_date: date,
+            city: city,
+            by_invitation: invitation,
+            age_regulation: ageRegulation
         }
 
         createEvent.mutate({...data})
     }
+
+    React.useEffect(() => {
+        setNotification({data: createEvent?.error?.response?.data})
+    }, [createEvent.isError])
+
+
+    React.useEffect(() => {
+        setNotification({data: createEvent.isSuccess && ["Event has been created!"], success: true})
+    }, [createEvent.isSuccess])
+
 
 
     const noteChangeHandler = (e) => {
@@ -59,8 +66,7 @@ function BookScreen() {
 
 
     if (isLoading) return <FullPageSpinner/>
-
-
+    console.log("renders __book screen")
     return (
         <div css={{
             position: "relative",

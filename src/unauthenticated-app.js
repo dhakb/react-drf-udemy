@@ -70,7 +70,6 @@ const LoginForm = ({onSubmit, submitButton}) => {
 
 const RegisterForm = ({onSubmit, submitButton}) => {
     const {isLoading, isError, error, run} = useAsync()
-    console.log("__server ERROR", error)
     const {register, handleSubmit, formState: {errors}} = useForm()
 
 
