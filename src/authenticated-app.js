@@ -32,7 +32,7 @@ function AuthenticatedApp() {
                 top: '10px',
                 right: '10px',
             }}>
-                <Button variant="secondary" onClick={logout} css={{marginRight: "20px"}}>Logout</Button>
+                <Button variant="secondary" onClick={logout} css={{marginRight: "20px", borderRadius: "4px"}}>Logout</Button>
             </div>
 
             <div
@@ -77,7 +77,7 @@ function NavLink(props) {
                     borderRadius: '2px',
                     borderLeft: '5px solid transparent',
                     ':hover,:focus': {
-                        color: colors.indigo,
+                        color: colors.brown,
                         textDecoration: 'none',
                         background: colors.gray10,
                     },
@@ -97,7 +97,7 @@ function NavLink(props) {
     )
 }
 
-function Nav(params) {
+function Nav() {
     return (
         <nav
             css={{

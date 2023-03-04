@@ -43,6 +43,10 @@ const buttonVariants = {
     success: {
         background: colors.green,
         color: colors.base
+    },
+    brown: {
+        background: colors.brown,
+        color: colors.base
     }
 }
 const Button = styled.button(

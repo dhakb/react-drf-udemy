@@ -13,10 +13,12 @@ function Confirmation({deleteHandler}) {
         justifyContent: "center",
         gap: "20px"
     }}>
-        <Button onClick={deleteHandler}>Delete</Button>
-        <ModalDismissButton>
-            <Button variant="secondary">Cancel</Button>
-        </ModalDismissButton>
+        <div css={{marginTop: "10px"}}>
+            <Button onClick={deleteHandler} variant="brown" css={{marginRight: "10px"}}>Delete</Button>
+            <ModalDismissButton>
+                <Button variant="secondary">Cancel</Button>
+            </ModalDismissButton>
+        </div>
     </div>
 }
 

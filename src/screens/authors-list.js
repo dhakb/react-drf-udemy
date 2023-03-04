@@ -44,6 +44,7 @@ function AuthorsListScreen() {
                 display: 'grid',
                 gridTemplateRows: 'repeat(auto-fill, minmax(100px, 1fr))',
                 gridGap: '1em',
+                minHeight: "50vh",
             }}>
                 {
                     authors?.results?.map((author) => (
@@ -53,8 +54,10 @@ function AuthorsListScreen() {
                     ))
                 }
             </ul>
-            <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPrevPage} nextPage={nextPage}
-                        prevPage={prevPage}/>
+            {
+                authors.next !== authors.previous &&  <Pagination fetchNextPage={fetchNextPage} fetchPrevPage={fetchPrevPage} nextPage={nextPage}
+                                                                  prevPage={prevPage}/>
+            }
         </div>
     );
 }

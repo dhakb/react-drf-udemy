@@ -14,13 +14,6 @@ AuthContext.displayName = "AuthContext"
 function AuthProvider(props) {
     const navigate = useNavigate()
     const {data, status, error, isLoading, isError, isSuccess, isIdle, setData, setError} = useAsync()
-    // console.log({
-    //     data,
-    //     isIdle,
-    //     isLoading,
-    //     isSuccess,
-    //     status
-    // })
 
 
     const login = (form) => auth.login(form)
@@ -46,7 +39,6 @@ function AuthProvider(props) {
     const logout = () => {
         auth.logOut()
         setData(null)
-        // queryCache.clear()
         window.location.href = "/"
     }
 
@@ -62,15 +54,7 @@ function AuthProvider(props) {
         return <FullPageSpinner/>
     }
 
-    // if (isError) {
-    //     return <FullPageErrorFallback error={error}/>
-    // }
-
-    // if (isSuccess) {
     return <AuthContext.Provider value={value} {...props}/>
-    // }
-
-    // throw new Error(`Unhandled status: ${status}`)
 }
 
 function useAuthContext() {

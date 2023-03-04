@@ -38,21 +38,26 @@ function AuthorBooksScreen() {
     }
 
 
-    if(isLoading) {
-        return <FullPageSpinner/>
-    }
+    if (isLoading) return <FullPageSpinner/>
+
 
     return (
         <div>
             <h1>Books by</h1>
-            <label htmlFor="limit" css={{marginRight: "8px"}}>Show per page</label>
-            <select value={limit} onChange={(e) => setLimit(e.target.value)} css={{
-                width: "100px",
-            }} id="limit">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-            </select>
+            {
+                books.next !== books.previous && (
+                    <>
+                        <label htmlFor="limit" css={{marginRight: "8px"}}>Show per page</label>
+                        <select value={limit} onChange={(e) => setLimit(e.target.value)} css={{
+                            width: "100px",
+                        }} id="limit">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                        </select>
+                    </>
+                )
+            }
 
             <ul css={{
                 marginTop: "20px",
@@ -68,7 +73,11 @@ function AuthorBooksScreen() {
                     </li>
                 ))}
             </ul>
-            <Pagination  nextPage={nextPage} prevPage={prevPage} fetchNextPage={fetchNextPage} fetchPrevPage={fetchPrevPage}/>
+            {
+                books.next !== books.previous &&
+                <Pagination nextPage={nextPage} prevPage={prevPage} fetchNextPage={fetchNextPage}
+                            fetchPrevPage={fetchPrevPage}/>
+            }
         </div>
     );
 }

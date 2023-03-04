@@ -9,14 +9,12 @@ import {CircleButton, FullPageSpinner} from "../components/lib";
 import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
 import {ModalContents, ModalOpenButton, ModalProvider} from "../components/modal";
 import {setNotification} from "../utils/utils";
-// import {ModalContext} from "../components/modal";
 import EventForm from "../components/event-form";
 import Confirmation from "../components/confirmation";
 import "@reach/dialog/styles.css";
 
 
 function EventScreen() {
-    // const [isOpen, setIsOpen] = React.useContext(ModalContext)
     const navigate = useNavigate()
     const {eventId} = useParams()
 
@@ -52,11 +50,6 @@ function EventScreen() {
     }, [updateEvent.isSuccess])
 
 
-    // React.useEffect(() => {
-    //     setIsOpen(false)
-    // }, [updateEvent.isSuccess])
-
-
     if (updateEvent.isLoading) return <FullPageSpinner/>
     if (isEventLoading) return <FullPageSpinner/>
 
@@ -87,9 +80,10 @@ function EventScreen() {
                                     <CircleButton css={{
                                         display: "flex",
                                         gap: "5px",
-                                        backgroundColor: "#e1d2d2",
+                                        backgroundColor: "#ab9d9d",
                                         width: "100px",
-                                        height: "30px"
+                                        height: "30px",
+                                        borderRadius: "7px"
                                     }}><FaRegTrashAlt/>Delete</CircleButton>
                                 </ModalOpenButton>
                                 <ModalContents title="Are you sure?" offCancel={true} aria-label="event form">
@@ -102,8 +96,9 @@ function EventScreen() {
                                     <CircleButton css={{
                                         display: "flex",
                                         gap: "5px",
-                                        backgroundColor: "#adb9cc",
+                                        backgroundColor: "#caced1",
                                         width: "100px",
+                                        borderRadius: "7px"
                                     }}><FaEdit/>Edit</CircleButton>
                                 </ModalOpenButton>
                                 <ModalContents title="Edit Event" offCancel={true} aria-label="event form">

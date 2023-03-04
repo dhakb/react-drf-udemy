@@ -54,9 +54,9 @@ function EventForm({onSubmit, isLoading, event = {}}) {
                 <label htmlFor="ageRegulation">age regulation</label>
             </FormGroup>
             <div css={{display: "flex", flexDirection: "column", gap: "5px"}}>
-                <Button type="submit">{!isLoading ? "save" : <Spinner css={{height: "12px"}}/>}</Button>
+                <Button type="submit" variant="brown">{!isLoading ? "save" : <Spinner css={{height: "12px"}}/>}</Button>
                 <ModalDismissButton>
-                    <Button variant="secondary">cancel</Button>
+                    <Button variant="secondary" css={{marginBottom: "20px"}}>cancel</Button>
                 </ModalDismissButton>
             </div>
         </form>

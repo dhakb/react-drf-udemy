@@ -64,9 +64,8 @@ function BookScreen() {
         }
     }
 
-
     if (isLoading) return <FullPageSpinner/>
-    console.log("renders __book screen")
+
     return (
         <div css={{
             position: "relative",
@@ -105,13 +104,13 @@ function BookScreen() {
             <TextArea css={{resize: "none"}} rows="10" cols="40" onChange={debounce(noteChangeHandler)} defaultValue={book?.note?.note_text}/>
             {
                 book?.event_id ? (
-                    <Button onClick={() => navigate(`../event/${book.event_id}`)}>
+                    <Button onClick={() => navigate(`../event/${book.event_id}`)} variant="success">
                         open event
                     </Button>
                 ) : (
                     <ModalProvider>
                         <ModalOpenButton>
-                            <Button variant="success">Add event</Button>
+                            <Button variant="brown">create event</Button>
                         </ModalOpenButton>
                         <ModalContents title="Add Event" offCancel={true} aria-label="event form">
                             <EventForm onSubmit={onEventSubmit} isLoading={createEvent.isLoading}/>
