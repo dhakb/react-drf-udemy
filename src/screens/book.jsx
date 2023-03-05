@@ -98,6 +98,7 @@ function BookScreen() {
                 {updateNote.isLoading && <Spinner css={{marginBottom: "7px"}}/>}
             </div>
             <TextArea css={{resize: "none"}} rows="10" cols="40" onChange={debounce(noteChangeHandler)} defaultValue={book?.note?.note_text}/>
+            <br/>
             {
                 book?.event_id ? (
                     <Button onClick={() => navigate(`../event/${book.event_id}`)} variant="success">

@@ -7,18 +7,23 @@ import {useForm} from "react-hook-form";
 import {useAsync} from "./utils/hooks/useAsync";
 import Logo from "./components/logo"
 import "@reach/dialog/styles.css";
+import {useNavigate} from "react-router-dom";
 
 
 const LoginForm = ({onSubmit, submitButton}) => {
+    const navigate = useNavigate()
     const {isError, isLoading, error, run} = useAsync()
     const {register, handleSubmit, formState: {errors}} = useForm()
+
 
     React.useEffect(() => {
         isError && setNotification({data: error.response.data})
     }, [isError])
 
     const submitForm = ({username, password}) => {
-        run(onSubmit({username, password}))
+        run(onSubmit({username, password})).then(() => {
+            navigate("/books")
+        })
     }
 
     return (
