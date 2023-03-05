@@ -1,9 +1,7 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx, keyframes} from '@emotion/core'
+import {keyframes} from '@emotion/react'
 
 import {Link as RouterLink} from 'react-router-dom'
-import styled from '@emotion/styled/macro'
+import styled from '@emotion/styled'
 import {FaSpinner} from "react-icons/fa";
 import * as colors from "../styles/colors"
 import {Dialog as ReachDialog} from '@reach/dialog'

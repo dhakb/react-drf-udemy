@@ -6,7 +6,7 @@ import {BrowserRouter} from "react-router-dom";
 import {AuthProvider} from "./context/auth-context";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {ReactQueryDevtools} from 'react-query/devtools'
-// import {ModalProvider} from "./components/modal";
+
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -25,9 +25,7 @@ root.render(
     <BrowserRouter>
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                {/*<ModalProvider>*/}
                     <App/>
-                {/*</ModalProvider>*/}
             </AuthProvider>
             <ReactQueryDevtools/>
         </QueryClientProvider>

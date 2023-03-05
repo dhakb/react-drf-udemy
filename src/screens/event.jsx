@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import React from "react"
 import {useNavigate, useParams} from "react-router";
 import {useEventDelete, useEventFetch, useEventUpdate} from "../queries/event";
@@ -9,14 +5,12 @@ import {CircleButton, FullPageSpinner} from "../components/lib";
 import {FaEdit, FaRegTrashAlt} from "react-icons/fa";
 import {ModalContents, ModalOpenButton, ModalProvider} from "../components/modal";
 import {setNotification} from "../utils/utils";
-// import {ModalContext} from "../components/modal";
 import EventForm from "../components/event-form";
 import Confirmation from "../components/confirmation";
 import "@reach/dialog/styles.css";
 
 
 function EventScreen() {
-    // const [isOpen, setIsOpen] = React.useContext(ModalContext)
     const navigate = useNavigate()
     const {eventId} = useParams()
 
@@ -51,10 +45,6 @@ function EventScreen() {
         setNotification({data: updateEvent.isSuccess && ["Event has been updated!"], success: true})
     }, [updateEvent.isSuccess])
 
-
-    // React.useEffect(() => {
-    //     setIsOpen(false)
-    // }, [updateEvent.isSuccess])
 
 
     if (updateEvent.isLoading) return <FullPageSpinner/>

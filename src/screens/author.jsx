@@ -1,9 +1,4 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import {Link, useParams} from "react-router-dom";
-
 import {useNoteCreate, useNoteDelete, useNoteUpdate} from "../queries/note";
 import {FullPageSpinner, Spinner, TextArea} from "../components/lib";
 import {StatusButton} from "../components/status-buttons";

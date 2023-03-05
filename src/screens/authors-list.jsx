@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as React from 'react';
 import {useAuthorsList} from "../queries/author";
 import {FullPageSpinner} from "../components/lib";

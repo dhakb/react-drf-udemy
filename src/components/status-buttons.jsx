@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import Tooltip from "@reach/tooltip";
 import * as colors from "../styles/colors"
 import {CircleButton} from "./lib";

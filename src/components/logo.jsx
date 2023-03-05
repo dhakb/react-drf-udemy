@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import {Fragment} from "react";
 
 

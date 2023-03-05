@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import {Button, FormGroup, Input, Spinner} from "./lib";
 import {ModalDismissButton} from "./modal";
 import {useForm} from "react-hook-form";

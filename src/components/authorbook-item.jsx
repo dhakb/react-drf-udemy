@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
 import {Link} from "react-router-dom";
 import * as colors from "../styles/colors";
 

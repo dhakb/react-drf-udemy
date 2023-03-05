@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import React from "react";
 import {useNavigate, useParams} from "react-router";
 import {ModalContents, ModalOpenButton, ModalProvider} from "../components/modal";
