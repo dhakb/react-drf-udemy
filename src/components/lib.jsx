@@ -83,7 +83,7 @@ Spinner.defaultProps = {
 
 const Dialog = styled(ReachDialog)({
     position: "absolute",
-    top: "35%",
+    top: "40%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     zIndex: "100",
@@ -93,7 +93,6 @@ const Dialog = styled(ReachDialog)({
     borderRadius: '3px',
     paddingBottom: '3.5em',
     boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.2)',
-    margin: '0 auto',
     [bp.small]: {
         width: '100%',
         margin: '10vh auto',
