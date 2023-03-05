@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as colors from "../styles/colors";
 import {StatusButton} from "./status-buttons";
 import {Link} from "react-router-dom";

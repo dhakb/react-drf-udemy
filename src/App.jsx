@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import {FullPageSpinner} from "./components/lib";
 import {useAuthContext} from "./context/auth-context";
 import {ToastContainer} from "react-toastify";
@@ -8,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const UnauthenticatedApp = React.lazy(() => import("./unauthenticated-app"))
 const AuthenticatedApp = React.lazy(() => import("./authenticated-app"))
+
 
 
 function App() {

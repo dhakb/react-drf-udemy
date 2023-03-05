@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as React from "react"
 import * as auth from "../utils/authProvider"
 import {useAsync} from "../utils/hooks/useAsync";

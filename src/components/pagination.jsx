@@ -1,8 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
-
 import {Button} from "./lib";
 import {usePageNumber} from "../utils/hooks/hooks";
 import PropTypes from "prop-types";

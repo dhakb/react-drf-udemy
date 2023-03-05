@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as React from 'react';
 import {CircleButton, Input, Spinner} from "./lib";
 import {FaEdit, FaRegSave, FaRegTrashAlt} from "react-icons/fa";

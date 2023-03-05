@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as React from 'react';
 import {useAuthContext} from "./context/auth-context";
 import {Route, Routes, useMatch, Link} from "react-router-dom";

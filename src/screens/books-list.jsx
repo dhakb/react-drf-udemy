@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as React from 'react';
 import {useBooksInfinite, useTags} from "../queries/book";
 import {BookListUL, Spinner} from "../components/lib";

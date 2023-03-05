@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import React from "react"
 import {useNavigate, useParams} from "react-router";
 import {useEventDelete, useEventFetch, useEventUpdate} from "../queries/event";
@@ -48,6 +44,8 @@ function EventScreen() {
     React.useEffect(() => {
         setNotification({data: updateEvent.isSuccess && ["Event has been updated!"], success: true})
     }, [updateEvent.isSuccess])
+
+
 
 
     if (updateEvent.isLoading) return <FullPageSpinner/>

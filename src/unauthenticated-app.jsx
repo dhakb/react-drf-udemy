@@ -1,7 +1,3 @@
-/** @jsx jsx */
-/** @jsxRuntime classic */
-import {jsx} from '@emotion/core'
-
 import * as React from "react"
 import {ModalContents, ModalOpenButton, ModalProvider} from "./components/modal";
 import {Button, FormGroup, Input, Spinner} from "./components/lib";
